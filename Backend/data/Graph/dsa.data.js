@@ -1,5 +1,3 @@
-
-
 const dsaData = {
     Section: "Step 15: Graph",
     content: [
