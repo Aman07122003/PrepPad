@@ -18,7 +18,7 @@ const __dirname = path.dirname(__filename);
 
 app.use('/api/notes', notesRoutes); 
 app.use("/files", express.static(path.join(process.cwd(), "Files")));
-app.use('/static', express.static(path.join(process.cwd(), 'Data/Graph/Media')));
+app.use('/static', express.static(path.join(process.cwd(), 'data/Graph/Media')));
 
 app.get('/', (req, res) => {
     res.send('Hello from Express!');
