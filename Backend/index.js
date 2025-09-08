@@ -1,23 +1,19 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+import dotenv from "dotenv";
+import db from './db/db.js';
+import { app } from './app.js';
 
-const app = express();
-const PORT = 5000;
 
-app.use(cors());
-app.use(bodyParser.json());
-
-app.get('/', (req, res) => {
-  res.send('Hello from backend!');
+dotenv.config({
+    path: './.env',
 });
 
-app.post('/data', (req, res) => {
-  const receivedData = req.body;
-  console.log('Received:', receivedData);
-  res.json({ message: 'Data received successfully', data: receivedData });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+db()
+    .then(() => {
+        app.listen(process.env.PORT, () => {
+            console.log(`Server is running on port ${process.env.PORT}`);
+        });  
+    })
+    .catch((err) => {
+        console.error('Failed to start the server:', err);
+        process.exit(1);
+    });
