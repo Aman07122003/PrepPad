@@ -613,7 +613,7 @@ import java.util.*;
             ]
         },
         {
-            Subsection: "Lec 2: Problems on BFS/DFS",
+            Subsection: "Lec 2: Problems on BFS-DFS",
             content: [
                 {
                     Topic: "Number of Provinces",
