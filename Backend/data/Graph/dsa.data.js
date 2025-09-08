@@ -2,7 +2,7 @@ const dsaData = {
     Section: "Step 15: Graph",
     content: [
         {
-            Subsection: "Basic",
+            Subsection: "Lec 1: Basic",
             content: [
                 {
                     Topic: "Graph and Types",
@@ -613,8 +613,115 @@ import java.util.*;
             ]
         },
         {
-            Subsection: "Advanced",
+            Subsection: "Lec 2: Problems on BFS/DFS",
             content: [
+                {
+                    Topic: "Number of Provinces",
+                    content: [
+                        {
+                            heading: "Number of Provinces",
+                            content: [
+                                {
+                                    subheading: "Problem Statement",
+                                    para: "Given an undirected graph with V vertices. We say two vertices u and v belong to a single province if there is a path from u to v or v to u. Your task is to find the number of provinces.",
+                                },
+                                {
+                                    subheading: "Examples",
+                                    image: "/static/Graph28.png"
+                                },
+                                {
+                                    subheading: "Approach",
+                                    image: "/static/Graph29.png"
+                                },
+                                {
+                                    image: "/static/Graph30.gif"
+                                },
+                            ]
+                        }
+                    ],
+                    video: "https://youtu.be/ACzkVtewUYA",
+                    code: `import java.util.*;
+
+class Solution {
+    // dfs traversal function 
+    private static void dfs(int node, 
+       ArrayList<ArrayList<Integer>> adjLs , 
+       int vis[]) {
+        vis[node] = 1; 
+        for(Integer it: adjLs.get(node)) {
+            if(vis[it] == 0) {
+                dfs(it, adjLs, vis); 
+            }
+        }
+    }
+    static int numProvinces(ArrayList<ArrayList<Integer>> adj, int V) {
+        ArrayList<ArrayList<Integer>> adjLs = new ArrayList<ArrayList<Integer>>(); 
+        for(int i = 0;i<V;i++) {
+            adjLs.add(new ArrayList<Integer>()); 
+        }
+        
+        // to change adjacency matrix to list 
+        for(int i = 0;i<V;i++) {
+            for(int j = 0;j<V;j++) {
+                // self nodes are not considered 
+                if(adj.get(i).get(j) == 1 && i != j) {
+                    adjLs.get(i).add(j); 
+                    adjLs.get(j).add(i); 
+                }
+            }
+        }
+        int vis[] = new int[V]; 
+        int cnt = 0; 
+        for(int i = 0;i<V;i++) {
+            if(vis[i] == 0) {
+               cnt++;
+               dfs(i, adjLs, vis); 
+            }
+        }
+        return cnt; 
+    }
+    public static void main(String[] args)
+    {
+
+        // adjacency matrix 
+        ArrayList<ArrayList<Integer> > adj = new ArrayList<ArrayList<Integer> >();
+
+        adj.add(new ArrayList<Integer>());
+        adj.get(0).add(0, 1);
+        adj.get(0).add(1, 0);
+        adj.get(0).add(2, 1);
+        adj.add(new ArrayList<Integer>());
+        adj.get(1).add(0, 0);
+        adj.get(1).add(1, 1);
+        adj.get(1).add(2, 0);
+        adj.add(new ArrayList<Integer>());
+        adj.get(2).add(0, 1);
+        adj.get(2).add(1, 0);
+        adj.get(2).add(2, 1);
+                
+        Solution ob = new Solution();
+        System.out.println(ob.numProvinces(adj,3));
+    }
+};
+
+
+
+
+Output: 2
+
+Time Complexity: O(N) + O(V+2E), Where O(N) is for outer loop and inner loop runs in total a single DFS over entire graph, and we know DFS takes a time of O(V+2E). 
+
+Space Complexity: O(N) + O(N),Space for recursion stack space and visited array.`,
+
+                    AdditionalResources: [
+                        {
+                            leetcode: "https://leetcode.com/problems/number-of-provinces/description/",
+                            gfg: "https://www.geeksforgeeks.org/graph-data-structure-and-algorithms/",
+                            VisuAlgo: "https://visualgo.net/en/graphds",
+                            youtubePlaylist: "https://www.youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn",
+                        },
+                    ]
+                },
             ]
         }
     ],
