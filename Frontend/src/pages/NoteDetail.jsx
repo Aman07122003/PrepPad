@@ -203,7 +203,7 @@ const NoteDetail = () => {
                         </p>
                         {item.image && (
                             <img 
-                                src={`https://preppad-ts91.onrender.com${item.image}`} 
+                                src={`${process.env.VITE_API_BASE_URL}${item.image}`} 
                                 alt="Content visual" 
                                 className="rounded-xl shadow-md mt-4 border border-gray-200"
                             />
