@@ -1,6 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { saveCanvasImage, loadCanvasImage } from '../api/Canva.api';
-
 
 const Canva = (noteId) => {
   const canvasRef = useRef(null);
@@ -11,49 +10,80 @@ const Canva = (noteId) => {
   const [isEraser, setIsEraser] = useState(false); 
   const [eraserSize, setEraserSize] = useState(10);
   const [presentNoteId, setPresentNoteId] = useState(false);
+  const [dpr, setDpr] = useState(1); // Device pixel ratio
 
-
-  useEffect(() => {
+  // Function to properly scale the canvas for high resolution displays
+  const setupCanvas = useCallback(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
+    
     const ctx = canvas.getContext('2d');
-
-    const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
+    const { width, height } = canvas.getBoundingClientRect();
+    
+    // Get device pixel ratio
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    setDpr(devicePixelRatio);
+    
+    // Set the canvas size, scaled by DPR
+    canvas.width = width * devicePixelRatio;
+    canvas.height = height * devicePixelRatio;
+    
+    // Scale the context to ensure proper drawing operations
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+    
+    // Set drawing styles
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
-    ctx.lineWidth = lineWidth;
-    ctx.strokeStyle = isEraser ? '#FFFFFF' : color; // ✅ Use white if eraser is on
-
+    ctx.lineWidth = isEraser ? eraserSize : lineWidth;
+    ctx.strokeStyle = isEraser ? '#FFFFFF' : color;
+    
+    // Improve image rendering quality
+    ctx.imageSmoothingEnabled = false;
+    
+    // If there's a saved image, draw it on the canvas
     if (savedImage) {
       const img = new Image();
       img.onload = () => {
-        ctx.drawImage(img, 0, 0);
+        // Clear and redraw the image at the correct scale
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, width, height);
       };
       img.src = savedImage;
     }
-
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-    };
-  }, [savedImage, color, lineWidth, isEraser]);
+  }, [savedImage, color, lineWidth, isEraser, eraserSize]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    setupCanvas();
+    
+    const handleResize = () => {
+      setupCanvas();
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [setupCanvas]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
     const ctx = canvas.getContext('2d');
-    ctx.lineWidth = isEraser ? eraserSize : lineWidth; // ✅ Use eraserSize if erasing
+    ctx.lineWidth = isEraser ? eraserSize : lineWidth;
     ctx.strokeStyle = isEraser ? '#FFFFFF' : color;
-  }, [lineWidth, color, isEraser, eraserSize]); // ✅ Include eraserSize in dependencies
-  
+    ctx.imageSmoothingEnabled = false; // Disable anti-aliasing for crisp lines
+  }, [lineWidth, color, isEraser, eraserSize, dpr]);
+
   const startDrawing = (e) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     const coords = getCoordinates(e);
+    
     ctx.beginPath();
     ctx.moveTo(coords.x, coords.y);
     setIsDrawing(true);
@@ -64,6 +94,7 @@ const Canva = (noteId) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     const coords = getCoordinates(e);
+    
     ctx.lineTo(coords.x, coords.y);
     ctx.stroke();
   };
@@ -78,21 +109,36 @@ const Canva = (noteId) => {
   const getCoordinates = (e) => {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
     if (e.touches) {
       return {
-        x: e.touches[0].clientX - rect.left,
-        y: e.touches[0].clientY - rect.top
+        x: (e.touches[0].clientX - rect.left) * scaleX / dpr,
+        y: (e.touches[0].clientY - rect.top) * scaleY / dpr
       };
     }
     return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
+      x: (e.clientX - rect.left) * scaleX / dpr,
+      y: (e.clientY - rect.top) * scaleY / dpr
     };
   };
 
   const saveCanvas = async () => {
     const canvas = canvasRef.current;
-    const dataURL = canvas.toDataURL('image/png');
+    
+    // Create a temporary canvas to save at a high resolution
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+    
+    // Draw the original canvas content to the temporary canvas
+    tempCtx.drawImage(canvas, 0, 0);
+    
+    // Get the data URL from the temporary canvas
+    const dataURL = tempCanvas.toDataURL('image/png');
 
     try {
       const response = await saveCanvasImage(noteId, { image: dataURL });
@@ -124,7 +170,9 @@ const Canva = (noteId) => {
 
       img.onload = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
+        // Draw the image at the correct scale
+        const { width, height } = canvas.getBoundingClientRect();
+        ctx.drawImage(img, 0, 0, width, height);
       };
       img.src = image;
     } catch (error) {
@@ -218,6 +266,11 @@ const Canva = (noteId) => {
           onTouchMove={draw}
           onTouchEnd={stopDrawing}
           className="bg-white rounded-lg shadow-md w-full h-full touch-none"
+          style={{
+            width: '100%',
+            height: '100%',
+            imageRendering: 'pixelated' // Ensures crisp rendering
+          }}
         />
       </div>
     </div>
