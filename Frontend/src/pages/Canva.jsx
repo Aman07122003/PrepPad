@@ -1,14 +1,16 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { saveCanvasImage, loadCanvasImage } from '../api/Canva.api';
 
+
 const Canva = (noteId) => {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [lineWidth, setLineWidth] = useState(5);
   const [color, setColor] = useState('#000000');
   const [savedImage, setSavedImage] = useState(null);
-  const [isEraser, setIsEraser] = useState(false); // ✅ Eraser mode state
-  const [eraserSize, setEraserSize] = useState(10); // Eraser size state
+  const [isEraser, setIsEraser] = useState(false); 
+  const [eraserSize, setEraserSize] = useState(10);
+  const [presentNoteId, setPresentNoteId] = useState(false);
 
 
   useEffect(() => {
@@ -96,7 +98,6 @@ const Canva = (noteId) => {
       const response = await saveCanvasImage(noteId, { image: dataURL });
       console.log("Response from saveCanvasImage:", response);
       setSavedImage(dataURL);
-      alert('Drawing saved successfully!');
     } catch (error) {
       console.error('Error saving canvas:', error);
       alert('Failed to save drawing.');
@@ -114,7 +115,7 @@ const Canva = (noteId) => {
       const response = await loadCanvasImage(noteId);
       console.log("Response from loadCanvasImage:", response);
       const image = response;
-      console.log("Loaded image data:", image);
+      setPresentNoteId(true);
       setSavedImage(image);
 
       const canvas = canvasRef.current;
@@ -127,14 +128,15 @@ const Canva = (noteId) => {
       };
       img.src = image;
     } catch (error) {
-      console.error('Error loading canvas:', error);
-      alert('No saved drawing found or failed to load.');
+      setPresentNoteId(false);
     }
   };
 
   useEffect(() => {
-    loadSavedImage();
-  }, []);
+    if (!presentNoteId) {
+      loadSavedImage();
+    }
+  }, [presentNoteId]);
 
   return (
     <div className="flex flex-col h-[1000px] bg-gradient-to-br from-blue-50 to-indigo-100">
