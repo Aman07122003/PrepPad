@@ -4,6 +4,7 @@ import Home from './pages/Home.jsx';
 import Notes from './pages/Notes.jsx';
 import CreateNote from './pages/CreateNote.jsx';
 import NoteDetail from './pages/NoteDetail.jsx';
+import Canva from './pages/Canva.jsx';
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Route path='/notes' element={<Notes/>}/>
         <Route path='/notes/new' element={<CreateNote/>}/>
         <Route path="/notes/:category/:subCategory/:question" element={<NoteDetail />} />
+        <Route path='/canva' element={<Canva/>}/>
       </Routes>
     </Router>
   );

@@ -2,9 +2,11 @@ import { useParams } from 'react-router-dom';
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { dsaNotes } from '../api/Notes.api';
-import { Code, Files, ArrowLeft, ArrowRight, Youtube, BookOpen, ExternalLink, Layers } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { Code, Files, ArrowLeft, ArrowRight, Youtube, BookOpen, ExternalLink, Layers, DraftingCompass } from 'lucide-react';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import Canva from './Canva';
 
 const NoteDetail = () => {
     const { category, subCategory, question } = useParams();
@@ -12,6 +14,8 @@ const NoteDetail = () => {
         sections: []
     });
     const [loading, setLoading] = useState(true);
+    const location = useLocation();
+    const { noteId } = location.state || {};
     const [error, setError] = useState(null);
     const [leftView, setLeftView] = useState('content'); // 'content' or 'code'
     const [rightView, setRightView] = useState('youtube'); // 'youtube' or 'code'
@@ -31,7 +35,7 @@ const NoteDetail = () => {
                     Topic: question,
                 };
                 const result = await dsaNotes(requestData);
-    
+                console.log(result);
                 // Set content and code
                 setcontentData({
                     sections: result.data.content || []
@@ -144,13 +148,12 @@ const NoteDetail = () => {
           <div className="flex flex-col w-1/2 bg-white border-r border-gray-200 shadow-lg rounded-r-xl m-2 ml-0">
             {/* Panel header with toggle buttons */}
             <div className="flex ml-1">
-            <button
-                onClick={() => generatePDF(contentData)}
-                className="px-4 py-2 hover:text-green-400 hover:border hover:border-green-400 text-black boder border-black rounded-lg shadow"
-                >
-                Download PDF
-                </button>
-    
+              <button
+                  onClick={() => generatePDF(contentData)}
+                  className="px-4 py-2 hover:text-green-400 hover:border hover:border-green-400 text-black boder border-black rounded-lg shadow"
+                  >
+                  Download PDF
+              </button>
               <button 
                 className={`px-4 py-1 mr-2 ml-2 rounded-lg font-medium transition-all duration-200 flex items-center ${
                   leftView === 'content' 
@@ -174,11 +177,23 @@ const NoteDetail = () => {
                 <Code className='text-green-600'/>
                 <div className='ml-1 text-sm'>Code</div>
               </button>
+              <button 
+                className={`px-3 py-1 rounded-lg ml-2 font-medium transition-all duration-200 flex items-center ${
+                  leftView === 'canva' 
+                    ? 'bg-blue-400 text-white shadow-md' 
+                    : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200 shadow-sm'
+                }`}
+                onClick={() => setLeftView('canva')}
+              >
+                
+                <DraftingCompass className='text-blue-600'/>
+                <div className='ml-1 text-sm'>Canva</div>
+              </button>
             </div>
             
             {/* Panel content */}
             <div className="flex-1 p-3 overflow-auto bg-white">
-              {leftView === 'content' ? (
+              {leftView === 'content' && (
                 <div className="h-full flex flex-col">
                   <div className="mb-6">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-green-100 text-green-800">
@@ -261,7 +276,8 @@ const NoteDetail = () => {
                     </button>
                   </div>
                 </div>
-              ) : (
+              )} 
+              {leftView === 'code' && (
                 <div className="relative h-full">
                   <div className="absolute top-3 right-3 z-10 flex space-x-2">
                     <button className="px-3 py-1 bg-green-200 text-gray-700 rounded-md text-xs font-medium hover:bg-gray-300">
@@ -276,6 +292,10 @@ const NoteDetail = () => {
                     defaultValue={code}
                   />
                 </div>
+              )}
+
+              {leftView === 'canva' && (
+                <Canva noteId = {noteId}/>
               )}
             </div>
           </div>

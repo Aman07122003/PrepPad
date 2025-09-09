@@ -30,6 +30,5 @@ router.get("/:id/file", async (req, res) => {
     }
 });
 router.delete("/:id", deleteNote);
-router.post("/dsa", getDSAContent);
-  
+router.post("/dsa", getDSAContent);  
 export default router;

@@ -644,9 +644,7 @@ import java.util.*;
 
 class Solution {
     // dfs traversal function 
-    private static void dfs(int node, 
-       ArrayList<ArrayList<Integer>> adjLs , 
-       int vis[]) {
+    private static void dfs(int node, ArrayList<ArrayList<Integer>> adjLs , int vis[]) {
         vis[node] = 1; 
         for(Integer it: adjLs.get(node)) {
             if(vis[it] == 0) {

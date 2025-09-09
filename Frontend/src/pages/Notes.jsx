@@ -248,9 +248,12 @@ const Notes = ({ groupedNotes = {}, category = '', subCategory = '' }) => {
     return sortedGrouped;
   };
 
-  const handleNoteClick = (category, subCategory, question) => {
-    navigate(`/notes/${category}/${subCategory}/${question}`);
-  };
+  const handleNoteClick = (category, subCategory, question, noteId) => {
+    navigate(`/notes/${category}/${subCategory}/${question}`, {
+        state: { noteId }
+    });
+};
+
 
   const formatDate = (dateString) => {
     if (!dateString) return 'No date';
@@ -550,7 +553,7 @@ const Notes = ({ groupedNotes = {}, category = '', subCategory = '' }) => {
                                                     <div className="text-sm font-medium text-gray-900 line-clamp-1">
                                                       <a
                                                         className="cursor-pointer hover:text-green-400"
-                                                        onClick={() => handleNoteClick(category, subCategory, note.question)}
+                                                        onClick={() => handleNoteClick(category, subCategory, note.question, note._id)}
                                                       >
                                                         {note.question}
                                                       </a>
