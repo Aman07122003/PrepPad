@@ -720,8 +720,347 @@ Space Complexity: O(N) + O(N),Space for recursion stack space and visited array.
                         },
                     ]
                 },
-            ]
+                {
+                    Topic: "Connected Components Problem in Matrix",
+                    content: [
+                        {
+                            heading: "Connected Components Problem in a Matrix",
+                            content: [
+                                {
+                                    para: "The Connected Components Problem in a matrix refers to identifying distinct regions in a matrix where connected cells satisfy certain conditions (e.g., having the same value like 1). These regions or groups are called connected components.",
+                                },
+                                {
+                                    image: "/static/Graph31.png"
+                                },
+                                {
+                                    subheading: "✅ Definitions",
+                                    para: "Connected component: A set of cells where each cell is connected to others through a path of adjacent cells. \n\n Adjacency: \n\n 4-directional: Up, down, left, right. \n 8-directional: Up, down, left, right, and diagonals."
+                                },
+                                {
+                                    image: "/static/Graph32.gif"
+                                },
+                            ]
+                        },
+                        {
+                            heading: "✅ DFS Approach (4-directional adjacency)",
+                            content: [
+                                {
+                                    image: "/static/Graph33.png"
+                                },
+                                {
+                                    image: "/static/Graph34.png"
+                                },
+                            ]
+                        }
+                    ],
+                    video: "https://youtu.be/9esCn0awd5k",
+                    code: `public class ConnectedComponentsDFS {
+
+    // Directions for 4-connected neighbors (up, down, left, right)
+    private static final int[] rowDirections = {-1, 1, 0, 0};
+    private static final int[] colDirections = {0, 0, -1, 1};
+
+    public static int countConnectedComponents(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) {
+            return 0;
         }
+
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        boolean[][] visited = new boolean[rows][cols];
+        int count = 0;
+
+        // Iterate over every cell in the matrix
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                // If the cell is 1 and not visited, it's a new component
+                if (matrix[r][c] == 1 && !visited[r][c]) {
+                    dfs(matrix, visited, r, c, rows, cols);
+                    count++; // Increment the count for this component
+                }
+            }
+        }
+        return count;
+    }
+
+    private static void dfs(int[][] matrix, boolean[][] visited, int r, int c, int rows, int cols) {
+        // Boundary checks
+        if (r < 0 || r >= rows || c < 0 || c >= cols) {
+            return;
+        }
+        // Skip if already visited or if it's not part of a component
+        if (visited[r][c] || matrix[r][c] == 0) {
+            return;
+        }
+
+        visited[r][c] = true; // Mark current cell as visited
+
+        // Explore all 4 directions
+        for (int d = 0; d < 4; d++) {
+            int newRow = r + rowDirections[d];
+            int newCol = c + colDirections[d];
+            dfs(matrix, visited, newRow, newCol, rows, cols);
+        }
+    }
+
+    // Main method to test the implementation
+    public static void main(String[] args) {
+        int[][] matrix = {
+            {1, 1, 0, 0},
+            {0, 1, 0, 0},
+            {0, 0, 1, 1},
+            {0, 0, 0, 1}
+        };
+
+        int result = countConnectedComponents(matrix);
+        System.out.println("Number of connected components: " + result);
+    }
+}
+`,
+
+                    AdditionalResources: [
+                        {
+                            leetcode: "",
+                            gfg: "",
+                            VisuAlgo: "https://visualgo.net/en/graphds",
+                            youtubePlaylist: "",
+                        },
+                    ]
+                },
+                {
+                    Topic: "Rotten Oranges",
+                    content: [
+                        {
+                            heading: "Rotten Oranges : Min time to rot all oranges : BFS",
+                            content: [
+                                {
+                                    subheading: "Problem Statement",
+                                    para: "You will be given an m x n grid, where each cell has the following values : \n\n 2  -  represents a rotten orange \n 1  -  represents a Fresh orange \n 0  -  represents an Empty Cell \n\n Every minute, if a Fresh Orange is adjacent to a Rotten Orange in 4-direction ( upward, downwards, right, and left ) it becomes Rotten. \n\n Return the minimum number of minutes required such that none of the cells has a Fresh Orange. If it's not possible, return -1.",
+                                },
+                                {
+                                    subheading: "Examples",
+                                    image: "/static/Graph35.png"
+                                },
+                                {
+                                    image: "/static/Graph36.png"
+                                },
+                                {
+                                    subheading: "Solution Approach",
+                                    para: "The idea is that for each rotten orange, we will find how many fresh oranges there are in its 4 directions. If we find any fresh orange we will make it into a rotten orange. One rotten orange can rotten up to 4 fresh oranges present in its 4 directions. For this problem,  we will be using the BFS ( Breadth-First Search ) technique.",
+                                    image: "/static/Graph37.gif"
+                                },
+                                {
+                                    subheading: "Steps to be followed",
+                                    para: "-> First of all we will create a Queue data structure to store coordinate of Rotten Oranges \n\n We will also have variables as: \n\n Total_oranges - It will store total number of oranges in the grid ( Rotten + Fresh ) \n Count - It will store the total number of oranges rotten by us .  \n\n Total_time - total time taken to rotten. \n\n -> After this, we will traverse the whole grid and count the total number of oranges in the grid and store it in Total_oranges. Then we will also push the rotten oranges in the Queue data structure as well. \n\n -> Now while our queue is not empty,  we will pick up each Rotten Orange and check in all its 4 directions whether a Fresh orange is present or not. If it is present we will make it rotten and push it in our queue data structure and pop out the Rotten Orange which we took up as its work is done now. \n\n -> Also we will keep track of the count of rotten oranges we are getting. \n\n -> If we rotten some oranges, then obviously our queue will not be empty. In that case, we will increase our total time. This goes on until our queue becomes empty. \n\n -> After it becomes empty, We will check whether the total number of oranges initially is equal to the current count of oranges. If yes, we will return the total time taken, else will return -1 because some fresh oranges are still left and can’t be made rotten."
+                                }
+                            ]
+                        }
+                    ],
+                    video: "https://youtu.be/yf3oUhkvqA0",
+                    code: `import java.util.*;
+class TUF{
+public static int orangesRotting(int[][] grid) {
+        if(grid == null || grid.length == 0) return 0;
+        int rows = grid.length;
+        int cols = grid[0].length;
+        Queue<int[]> queue = new LinkedList<>();
+        int count_fresh = 0;
+        //Put the position of all rotten oranges in queue
+        //count the number of fresh oranges
+        for(int i = 0 ; i < rows ; i++) {
+            for(int j = 0 ; j < cols ; j++) {
+                if(grid[i][j] == 2) {
+                    queue.offer(new int[]{i , j});
+                }
+                if(grid[i][j] != 0) {
+                    count_fresh++;
+                }
+            }
+        }
+       
+        if(count_fresh == 0) return 0;
+        int countMin = 0, cnt = 0;
+        int dx[] = {0, 0, 1, -1};
+        int dy[] = {1, -1, 0, 0};
+        
+        //bfs starting from initially rotten oranges
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            cnt += size; 
+            for(int i = 0 ; i < size ; i++) {
+                int[] point = queue.poll();
+                for(int j = 0;j<4;j++) {
+                    int x = point[0] + dx[j];
+                    int y = point[1] + dy[j];
+                    
+                    if(x < 0 || y < 0 || x >= rows || y >= cols || grid[x][y] == 0 || 
+                    grid[x][y] == 2) continue;
+                    
+                    grid[x][y] = 2;
+                    queue.offer(new int[]{x , y});
+                }
+            }
+            if(queue.size() != 0) {
+                countMin++;
+            }
+        }
+        return count_fresh == cnt ? countMin : -1;
+    }
+    public static void main(String args[])
+    {
+        int arr[][]={ {2,1,1} , {1,1,0} , {0,1,1} };
+        int rotting = orangesRotting(arr);
+        System.out.println("Minimum Number of Minutes Required "+rotting);
+    }
+}
+    
+Output:
+
+Minimum Number of Minutes Required 4
+
+Time Complexity: O ( n x n ) x 4    
+
+Reason: Worst-case - We will be making each fresh orange rotten in the grid and for each rotten orange will check in 4 directions
+
+Space Complexity: O ( n x n )
+
+Reason: worst-case -  If all oranges are Rotten, we will end up pushing all rotten oranges into the Queue data structure
+`,
+
+                    AdditionalResources: [
+                        {
+                            leetcode: "https://leetcode.com/problems/rotting-oranges/description/",
+                            gfg: "https://www.geeksforgeeks.org/dsa/minimum-time-required-so-that-all-oranges-become-rotten/",
+                            VisuAlgo: "https://visualgo.net/en/graphds",
+                            youtubePlaylist: "https://www.youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn",
+                        },
+                    ]
+                },
+                {
+                    Topic: "Flood Fill",
+                    content: [
+                        {
+                            heading: "Flood Fill",
+                            content: [
+                                {
+                                    subheading: "Problem Statement",
+                                    para: "An image is represented by a 2-D array of integers, each integer representing the pixel value of the image. Given a coordinate (sr, sc) representing the starting pixel (row and column) of the flood fill, and a pixel value newColor, \"flood fill\" the image. \n\n To perform a \"flood fill\", consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same colour as the starting pixel, plus any pixels connected 4-directionally to those pixels (also with the same colour as the starting pixel), and so on. Replace the colour of all of the aforementioned pixels with the newColor.",
+                                },
+                                {
+                                    para: "\Pre-req:\ Connected Components, Graph traversal techniques",
+                                    image: "/static/Graph38.png"
+                                },
+                                {
+                                    subheading: "Explanation:",
+                                    para: "From the centre of the image (with position (sr, sc) = (1, 1)), all pixels connected by a path of the same colour as the starting pixel are colored with the new colour. \n\n Note the bottom corner is not colored 2, because it is not 4-directionally connected to the starting pixel.",
+                                    image: "/static/Graph39.gif",
+                                },
+                                {
+                                    image: "/static/Graph40.png"
+                                },
+                                {
+                                    subheading: "Solution",
+                                    para: "To perform a flood fill, consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same colour as the starting pixel, plus any pixels connected 4-directionally to those pixels (also with the same colour as the starting pixel), and so on. \n\n We know about both the traversals, Breadth First Search (BFS) and Depth First Search (DFS). We can follow BFS also, where we start at a given point and colour level wise, i.e., we go simultaneously to all its neighbours. We can use any of the traversals to solve this problem, in our case we will be using DFS just to explore multiple approaches.",
+                                    image: "/static/Graph41.png"
+                                },
+                                {
+                                    para: "In this way, “flood fill” will be performed. It doesn’t matter how we are colouring the pixels, we just want to colour all of the aforementioned pixels with the newColor. So, we can use any of the traversal techniques. \n\n Consider the following example to understand how DFS traverses the pixels and colours them accordingly.",
+                                    image: "/static/Graph42.gif"
+                                },
+                                {
+                                    subheading: "How to set boundaries for 4 directions?",
+                                    para: "The 4 neighbours will have following indexes:",
+                                },
+                                {
+                                    image: "/static/Graph43.png"
+                                },
+                                {
+                                    para: "Now, either we can apply 4 conditions or follow the following method.  \n\n From the above image, it is clear that delta change in row is -1, +0, +1, +0. Similarly, the delta change in column is 0, +1, +0, -1.  So we can apply the same logic to find the neighbours of a particular pixel (<row, column>).",
+                                },
+                            ]
+                        }
+                    ],
+                    video: "https://youtu.be/C-2_uSRli8o",
+                    code: `import java.util.*;
+
+class Solution
+{
+    private void dfs(int row, int col, 
+     int[][] ans,
+     int[][] image, 
+     int newColor, int delRow[], int delCol[],
+     int iniColor) {
+        // color with new color
+        ans[row][col] = newColor; 
+        int n = image.length;
+        int m = image[0].length; 
+        // there are exactly 4 neighbours
+        for(int i = 0;i<4;i++) {
+            int nrow = row + delRow[i]; 
+            int ncol = col + delCol[i]; 
+            // check for valid coordinate 
+            // then check for same initial color and unvisited pixel
+            if(nrow>=0 && nrow<n && ncol>=0 && ncol < m && 
+            image[nrow][ncol] == iniColor && ans[nrow][ncol] != newColor) {
+                dfs(nrow, ncol, ans, image, newColor, delRow, delCol, iniColor); 
+            }
+        }
+    }
+    public int[][] floodFill(int[][] image, int sr, int sc, int newColor)
+    {
+        // get initial color
+        int iniColor = image[sr][sc]; 
+        int[][] ans = image; 
+        // delta row and delta column for neighbours
+        int delRow[] = {-1, 0, +1, 0};
+        int delCol[] = {0, +1, 0, -1}; 
+        dfs(sr, sc, ans, image, newColor, delRow, delCol, iniColor); 
+        return ans;  
+    }
+    public static void main(String[] args)
+    {
+        int[][] image =  {
+	        {1,1,1},
+	        {1,1,0},
+	        {1,0,1}
+	    };
+
+        // sr = 1, sc = 1, newColor = 2       
+        Solution obj = new Solution();
+        int[][] ans = obj.floodFill(image, 1, 1, 2);
+        for(int i = 0; i < ans.length; i++){
+            for(int j = 0; j < ans[i].length; j++)
+                System.out.print(ans[i][j] + " ");
+            System.out.println();
+        }
+    }
+
+
+    Output:
+
+    2 2 2
+    2 2 0 
+    2 0 1
+    Time Complexity: O(NxM + NxMx4) ~ O(N x M)
+
+    For the worst case, all of the pixels will have the same colour, so DFS function will be called for (N x M) nodes and for every node we are traversing for 4 neighbours, so it will take O(N x M x 4) time.
+
+    Space Complexity: O(N x M) + O(N x M)
+
+    O(N x M) for copied input array and recursive stack space takes up N x M locations at max. 
+}`,
+
+                    AdditionalResources: [
+                        {
+                            leetcode: "https://leetcode.com/problems/flood-fill/description/",
+                            gfg: "https://www.geeksforgeeks.org/dsa/flood-fill-algorithm/",
+                            VisuAlgo: "https://visualgo.net/en/graphds",
+                            youtubePlaylist: "https://www.youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn",
+                        },
+                    ]
+                },
+            ]
+        },
     ],
 };
 

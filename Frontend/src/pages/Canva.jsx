@@ -21,7 +21,7 @@ const Canva = (noteId) => {
     const { width, height } = canvas.getBoundingClientRect();
     
     // Get device pixel ratio
-    const devicePixelRatio = window.devicePixelRatio || 1;
+    const devicePixelRatio = window.devicePixelRatio || 10;
     setDpr(devicePixelRatio);
     
     // Set the canvas size, scaled by DPR
