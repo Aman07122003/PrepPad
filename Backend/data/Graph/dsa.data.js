@@ -847,7 +847,7 @@ Space Complexity: O(N) + O(N),Space for recursion stack space and visited array.
                                 {
                                     subheading: "Solution Approach",
                                     para: "The idea is that for each rotten orange, we will find how many fresh oranges there are in its 4 directions. If we find any fresh orange we will make it into a rotten orange. One rotten orange can rotten up to 4 fresh oranges present in its 4 directions. For this problem,  we will be using the BFS ( Breadth-First Search ) technique.",
-                                    image: "/static/Graph37.gif"
+                                    image: "/static/Graph37.png"
                                 },
                                 {
                                     subheading: "Steps to be followed",
@@ -1034,21 +1034,22 @@ class Solution
             System.out.println();
         }
     }
+}
+    
+Output:
+
+2 2 2
+2 2 0 
+2 0 1
 
 
-    Output:
+Time Complexity: O(NxM + NxMx4) ~ O(N x M)
 
-    2 2 2
-    2 2 0 
-    2 0 1
-    Time Complexity: O(NxM + NxMx4) ~ O(N x M)
+For the worst case, all of the pixels will have the same colour, so DFS function will be called for (N x M) nodes and for every node we are traversing for 4 neighbours, so it will take O(N x M x 4) time.
 
-    For the worst case, all of the pixels will have the same colour, so DFS function will be called for (N x M) nodes and for every node we are traversing for 4 neighbours, so it will take O(N x M x 4) time.
+Space Complexity: O(N x M) + O(N x M)
 
-    Space Complexity: O(N x M) + O(N x M)
-
-    O(N x M) for copied input array and recursive stack space takes up N x M locations at max. 
-}`,
+O(N x M) for copied input array and recursive stack space takes up N x M locations at max. `,
 
                     AdditionalResources: [
                         {
