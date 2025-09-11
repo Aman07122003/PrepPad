@@ -986,58 +986,60 @@ Reason: worst-case -  If all oranges are Rotten, we will end up pushing all rott
                     video: "https://youtu.be/C-2_uSRli8o",
                     code: `import java.util.*;
 
-class Solution
-{
-    private void dfs(int row, int col, 
-     int[][] ans,
-     int[][] image, 
-     int newColor, int delRow[], int delCol[],
-     int iniColor) {
-        // color with new color
-        ans[row][col] = newColor; 
-        int n = image.length;
-        int m = image[0].length; 
-        // there are exactly 4 neighbours
-        for(int i = 0;i<4;i++) {
-            int nrow = row + delRow[i]; 
-            int ncol = col + delCol[i]; 
-            // check for valid coordinate 
-            // then check for same initial color and unvisited pixel
-            if(nrow>=0 && nrow<n && ncol>=0 && ncol < m && 
-            image[nrow][ncol] == iniColor && ans[nrow][ncol] != newColor) {
-                dfs(nrow, ncol, ans, image, newColor, delRow, delCol, iniColor); 
-            }
-        }
-    }
-    public int[][] floodFill(int[][] image, int sr, int sc, int newColor)
-    {
-        // get initial color
-        int iniColor = image[sr][sc]; 
-        int[][] ans = image; 
-        // delta row and delta column for neighbours
-        int delRow[] = {-1, 0, +1, 0};
-        int delCol[] = {0, +1, 0, -1}; 
-        dfs(sr, sc, ans, image, newColor, delRow, delCol, iniColor); 
-        return ans;  
-    }
-    public static void main(String[] args)
-    {
-        int[][] image =  {
-	        {1,1,1},
-	        {1,1,0},
-	        {1,0,1}
-	    };
+class Solution {
 
-        // sr = 1, sc = 1, newColor = 2       
+    // DFS function to fill the connected area
+    private void dfs(int row, int col, int[][] image, int newColor, int iniColor) {
+        int n = image.length;
+        int m = image[0].length;
+
+        // Check if the current cell is out of bounds or not the same color
+        if(row < 0 || col < 0 || row >= n || col >= m || image[row][col] != iniColor) {
+            return;
+        }
+
+        // Color the current cell
+        image[row][col] = newColor;
+
+        // Move in all four directions
+        dfs(row - 1, col, image, newColor, iniColor); // Up
+        dfs(row + 1, col, image, newColor, iniColor); // Down
+        dfs(row, col - 1, image, newColor, iniColor); // Left
+        dfs(row, col + 1, image, newColor, iniColor); // Right
+    }
+
+    public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+        int iniColor = image[sr][sc];
+
+        // If the starting pixel is already the new color, return it as is
+        if(iniColor == newColor) return image;
+
+        // Start DFS
+        dfs(sr, sc, image, newColor, iniColor);
+
+        return image;
+    }
+
+    public static void main(String[] args) {
+        int[][] image = {
+            {1,1,1},
+            {1,1,0},
+            {1,0,1}
+        };
+
         Solution obj = new Solution();
-        int[][] ans = obj.floodFill(image, 1, 1, 2);
-        for(int i = 0; i < ans.length; i++){
-            for(int j = 0; j < ans[i].length; j++)
-                System.out.print(ans[i][j] + " ");
+        int[][] result = obj.floodFill(image, 1, 1, 2);
+
+        // Print the final image
+        for(int i = 0; i < result.length; i++) {
+            for(int j = 0; j < result[0].length; j++) {
+                System.out.print(result[i][j] + " ");
+            }
             System.out.println();
         }
     }
 }
+
     
 Output:
 
