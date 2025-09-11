@@ -879,14 +879,14 @@ public static int orangesRotting(int[][] grid) {
         }
        
         if(count_fresh == 0) return 0;
-        int countMin = 0, cnt = 0;
+        int minutes = 0;
         int dx[] = {0, 0, 1, -1};
         int dy[] = {1, -1, 0, 0};
         
         //bfs starting from initially rotten oranges
         while(!queue.isEmpty()) {
             int size = queue.size();
-            cnt += size; 
+            boolean rottedThisRound = false;
             for(int i = 0 ; i < size ; i++) {
                 int[] point = queue.poll();
                 for(int j = 0;j<4;j++) {
@@ -898,13 +898,16 @@ public static int orangesRotting(int[][] grid) {
                     
                     grid[x][y] = 2;
                     queue.offer(new int[]{x , y});
+                    count_fresh--;
+                    rottedThisRound = true;
+
                 }
             }
-            if(queue.size() != 0) {
-                countMin++;
+            if(rottenThisRound) {
+                minutes++;
             }
         }
-        return count_fresh == cnt ? countMin : -1;
+        return count_fresh == 0 ? minutes : -1;
     }
     public static void main(String args[])
     {
