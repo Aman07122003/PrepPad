@@ -1065,6 +1065,244 @@ O(N x M) for copied input array and recursive stack space takes up N x M locatio
                         },
                     ]
                 },
+                {
+                    Topic: "Cycle Detection in unirected Graph",
+                    content: [
+                        {
+                            heading: "Detect Cycle in an Undirected Graph (using BFS)",
+                            content: [
+                                {
+                                    subheading: "Problem Statement",
+                                    para: "Given an undirected graph with V vertices and E edges, check whether it contains any cycle or not.",
+                                },
+                                {
+                                    subheading: "Examples",
+                                    image: "/static/Graph44.png"
+                                },
+                                {
+                                    image: "/static/Graph45.png",
+                                },
+                                {
+                                    subheading: "Intuition",
+                                    para: "The cycle in a graph starts from a node and ends at the same node. So we can think of two algorithms to do this, in this article we will be reading about the BFS, and in the next, we will be learning how to use DFS to check. \n\n Breadth First Search, BFS is a traversal technique where we visit the nodes level-wise, i.e., it visits the same level nodes simultaneously, and then moves to the next level. \n\n The intuition is that we start from a node, and start doing BFS level-wise, if somewhere down the line, we visit a single node twice, it means we came via two paths to end up at the same node. It implies there is a cycle in the graph because we know that we start from different directions but can arrive at the same node only if the graph is connected or contains a cycle, otherwise we would never come to the same node again.",
+                                },
+                                {
+                                    subheading: "Approach",
+                                    para: "-> Queue: Define a queue and insert the source node along with parent data (<source node, parent>). For example, (2, 1) means 2 is the source node and 1 is its parent node. \n\n ->Visited array: an array initialized to 0 indicating unvisited nodes.",
+                                },
+                                {
+                                    subheading: "The Algorithm steps are as follows:",
+                                    para: "-> For BFS traversal, we need a queue data structure and a visited array. \n\n -> Push the pair of the source node and its parent data (<source, parent>) in the queue, and mark the node as visited. The parent will be needed so that we don’t do a backward traversal in the graph, we just move frontwards. \n\n -> Start the BFS traversal, pop out an element from the queue every time and travel to all its unvisited neighbors using an adjacency list. \n\n -> Repeat the steps either until the queue becomes empty, or a node appears to be already visited which is not the parent, even though we traveled in different directions during the traversal, indicating there is a cycle. \n\n -> If the queue becomes empty and no such node is found then there is no cycle in the graph. \n\n A graph can have connected components as well. In such cases, if any component forms a cycle then the graph is said to have a cycle. We can follow the algorithm for the same:",
+                                },
+                                {
+                                    image: "/static/Graph46.png"
+                                },
+                                {
+                                    image: "/static/Graph47.gif"
+                                },
+                            ]
+                        },
+                        {
+                            heading: "Detect Cycle in an Undirected Graph (using DFS)",
+                            content: [
+                                {
+                                    subheading: "Problem Statement",
+                                    para: "Given an undirected graph with V vertices and E edges, check whether it contains any cycle or not.",
+                                },
+                                {
+                                    subheading: "Examples",
+                                    image: "/static/Graph48.png"
+                                },
+                                {
+                                    image: "/static/Graph49.png",
+                                },
+                                {
+                                    subheading: "Intuition",
+                                    para: "The cycle in a graph starts from a node and ends at the same node. DFS is a traversal technique that involves the idea of recursion and backtracking. DFS goes in-depth, i.e., traverses all nodes by going ahead, and when there are no further nodes to traverse in the current path, then it backtracks on the same path and traverses other unvisited nodes. The intuition is that we start from a source and go in-depth, and reach any node that has been previously visited in the past; it means there's a cycle.",
+                                },
+                                {
+                                    subheading: "Approach",
+                                    para: "The algorithm steps are as follows: \n\n -> In the DFS function call make sure to store the parent data along with the source node, create a visited array, and initialize to 0. The parent is stored so that while checking for re-visited nodes, we don’t check for parents. \n\n -> We run through all the unvisited adjacent nodes using an adjacency list and call the recursive dfs function. Also, mark the node as visited \n\n -> If we come across a node that is already marked as visited and is not a parent node, then keep on returning true indicating the presence of a cycle; otherwise return false after all the adjacent nodes have been checked and we did not find a cycle. \n\n NOTE: We can call it a cycle only if the already visited node is a non-parent node because we cannot say we came to a node that was previously the parent node. \n\n -> For example, node 2 has two adjacent nodes 1 and 5. 1 is already visited but it is the parent node ( DFS(2, 1) ), So this cannot be called a cycle.",
+                                    image: "/static/Graph50.png"
+                                },
+                                {
+                                    para: "Node 3 has three adjacent nodes, where 4 and 6 are already visited but node 1 is not visited by node 3, but it’s already marked as visited and is a non-parent node ( DFS(3, 6) ), indicating the presence of cycle.",
+                                },
+                                {
+                                    image: "/static/Graph51.png"
+                                },
+                                {
+                                    subheading: "Pseudocode:",
+                                    image: "/static/Graph52.png"
+                                },
+                                {
+                                    para: "Consider the following graph and its adjacency list.",
+                                    image: "/static/Graph53.png",
+                                },
+                                {
+                                    image: "/static/Graph54.gif",
+                                }
+                            ]
+                        }
+                    ],
+                    video: "https://youtu.be/BPlrALf1LDU",
+                    code: `
+
+
+--------------------------------------------------------
+|  Cycle Detection in an Undirected Graph (using BFS)  |
+--------------------------------------------------------
+
+
+
+import java.util.*;
+class Solution {
+
+    // Helper method to check for cycle using BFS
+    private boolean hasCycle(ArrayList<ArrayList<Integer>> adj, int start, boolean[] visited) {
+        Queue<Pair> queue = new LinkedList<>();
+        queue.add(new Pair(start, -1));
+        visited[start] = true;
+
+        while (!queue.isEmpty()) {
+            Pair current = queue.poll();
+            int node = current.node;
+            int parent = current.parent;
+
+            for (int neighbor : adj.get(node)) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    queue.add(new Pair(neighbor, node));
+                } else if (neighbor != parent) {
+                    return true; // Cycle detected
+                }
+            }
+        }
+        return false;
+    }
+
+    // Main method to detect cycle in the graph
+    public boolean isCycle(int V, ArrayList<ArrayList<Integer>> adj) {
+        boolean[] visited = new boolean[V];
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                if (hasCycle(adj, i, visited)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        int V = 4;
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        // Adding edges
+        adj.get(1).add(2);
+        adj.get(2).add(1);
+        adj.get(2).add(3);
+        adj.get(3).add(2);
+
+        Solution solution = new Solution();
+        boolean ans = solution.isCycle(V, adj);
+
+        System.out.println(ans ? "1" : "0");
+    }
+}
+
+// Helper class to store node and its parent in BFS
+class Pair {
+    int node;
+    int parent;
+
+    public Pair(int node, int parent) {
+        this.node = node;
+        this.parent = parent;
+    }
+}
+
+
+--------------------------------------------------------
+|  Cycle Detection in an Undirected Graph (using DFS)  |
+--------------------------------------------------------
+
+
+
+import java.util.*;
+
+class Solution {
+
+    // Helper method to check for cycle using DFS
+    private boolean hasCycleDFS(int node, int parent, ArrayList<ArrayList<Integer>> adj, boolean[] visited) {
+        visited[node] = true;
+
+        for (int neighbor : adj.get(node)) {
+            if (!visited[neighbor]) {
+                if (hasCycleDFS(neighbor, node, adj, visited)) {
+                    return true;
+                }
+            } else if (neighbor != parent) {
+                return true; // Cycle detected
+            }
+        }
+        return false;
+    }
+
+    // Main method to detect cycle in the graph
+    public boolean isCycle(int V, ArrayList<ArrayList<Integer>> adj) {
+        boolean[] visited = new boolean[V];
+
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                if (hasCycleDFS(i, -1, adj, visited)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        int V = 4;
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        // Adding edges
+        adj.get(1).add(2);
+        adj.get(2).add(1);
+        adj.get(2).add(3);
+        adj.get(3).add(2);
+
+        Solution solution = new Solution();
+        boolean ans = solution.isCycle(V, adj);
+
+        System.out.println(ans ? "1" : "0");
+    }
+}
+
+
+
+Output:  0
+
+Time Complexity: O(N + 2E) + O(N), Where N = Nodes, 2E is for total degrees as we traverse all adjacent nodes. In the case of connected components of a graph, it will take another O(N) time.
+
+Space Complexity: O(N) + O(N) ~ O(N), Space for queue data structure and visited array.`,
+
+                    AdditionalResources: [
+                        {
+                            leetcode: "",
+                            gfg: "https://www.geeksforgeeks.org/dsa/detect-cycle-in-an-undirected-graph-using-bfs/",
+                            VisuAlgo: "https://visualgo.net/en/graphds",
+                            youtubePlaylist: "https://www.youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn",
+                        },
+                    ]
+                },
             ]
         },
     ],
