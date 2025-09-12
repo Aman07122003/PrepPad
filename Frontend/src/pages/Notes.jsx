@@ -514,19 +514,10 @@ const Notes = ({ groupedNotes = {}, category = '', subCategory = '' }) => {
                                               Heading
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                              PDF
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                               Tags
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                               Difficulty
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                              Code
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs flex items-center font-medium text-gray-500 uppercase tracking-wider">
-                                              Video
                                             </th>
                                             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                                               Actions
@@ -563,30 +554,6 @@ const Notes = ({ groupedNotes = {}, category = '', subCategory = '' }) => {
                                               </td>
                                               
                                               <td className="px-6 py-4 whitespace-nowrap">
-                                                {note.pdfFile ? (
-                                                  <div className="flex gap-2">
-                                                    <button
-                                                      onClick={() => handleViewPDF(note.pdfFile, note.question.heading || note.question)}
-                                                      className="text-blue-600 hover:text-blue-800 transition-colors"
-                                                      title="View PDF"
-                                                    >
-                                                      <Eye size={16} />
-                                                    </button>
-                                                    <a
-                                                      href={note.pdfFile}
-                                                      download
-                                                      className="text-blue-600 hover:text-blue-800 transition-colors"
-                                                      title="Download PDF"
-                                                    >
-                                                      <Download size={16} />
-                                                    </a>
-                                                  </div>
-                                                ) : (
-                                                  <span className="text-gray-400 text-sm">No PDF</span>
-                                                )}
-                                              </td>
-                                              
-                                              <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex flex-wrap gap-1 max-w-xs">
                                                   {note.tags?.slice(0, 4).map((t) => (
                                                     <span
@@ -612,35 +579,6 @@ const Notes = ({ groupedNotes = {}, category = '', subCategory = '' }) => {
                                                 `}>
                                                   {note.difficulty || 'Not set'}
                                                 </span>
-                                              </td>
-
-                                              <td className='px-9 py-4 whitespace-nowrap ml-3'>
-                                                {note.source ? (
-                                                  <a
-                                                    href={note.source}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1"
-                                                  >
-                                                    <Code size={16} />
-                                                  </a>
-                                                ) : (
-                                                  <span className="text-gray-400 text-sm">No Code</span>
-                                                )}
-                                              </td>
-                                              <td className='px-9 py-4 whitespace-nowrap ml-3'>
-                                                {note.video ? (
-                                                  <a
-                                                    href={note.video}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1"
-                                                  >
-                                                    <Video size={16} />
-                                                  </a>
-                                                ) : (
-                                                  <span className="text-gray-400 text-sm">No Video</span>
-                                                )}
                                               </td>
                                               
                                               <td className="px-6 py-4 whitespace-nowrap text-center">
