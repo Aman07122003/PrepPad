@@ -1305,6 +1305,784 @@ Space Complexity: O(N) + O(N) ~ O(N), Space for queue data structure and visited
                 },
             ]
         },
+        {
+            Subsection: "Lec 3: Problems on Topo Sort",
+            content: [
+                {
+                    Topic: "Topo Sort",
+                    content: [
+                        {
+                            heading: "Topological Sort Algorithm",
+                            content: [
+                                {
+                                    subheading: "Problem Statement:",
+                                    para: "Given a Directed Acyclic Graph (DAG) with V vertices and E edges, Find any Topological Sorting of that Graph."
+                                },
+                                {
+                                    subheading: "Note:",
+                                    para: "In topological sorting, node u will always appear before node v if there is a directed edge from node u towards node v(u -> v)."
+                                },
+                                {
+                                    subheading: "Examples",
+                                    image: "/static/Graph55.png"
+                                },
+                                {
+                                    image: "/static/Graph56.png"
+                                },
+                                {
+                                    subheading: "Solution",
+                                    para: "Topological sorting only exists in Directed Acyclic Graph (DAG). If the nodes of a graph are connected through directed edges and the graph does not contain a cycle, it is called a directed acyclic graph(DAG). \n\n The topological sorting of a directed acyclic graph is nothing but the linear ordering of vertices such that if there is an edge between node u and v(u -> v), node u appears before v in that ordering. \n\n Now, let's understand Why topological sort only exists in DAG: \n\n -> Case 1 (If the edges are undirected): If there is an undirected edge between node u and v, it signifies that there is an edge from node u to v(u -> v) as well as there is an edge from node v to u(v -> u). But according to the definition of topological sorting, it is practically impossible to write such ordering where u appears before v and v appears before u simultaneously. So, it is only possible for directed edges. \n\n -> Case 2(If the directed graph contains a cycle): The following directed graph contains a cycle:",
+                                    image: "/static/Graph57.png"
+                                },
+                                {
+                                    image: "/static/Graph58.png"
+                                },
+                                {
+                                    subheading: "Intuition",
+                                    para: "Since we are inserting the nodes into the stack after the completion of the traversal, we are making sure, there will be no one who appears afterward but may come before in the ordering as everyone during the traversal would have been inserted into the stack."
+                                },
+                                {
+                                    subheading: "Note:",
+                                    para: "Points to remember, that node will be marked as visited immediately after making the DFS call and before returning from the DFS call, the node will be pushed into the stack."
+                                },
+                            ]
+                        }
+                    ],
+                    video: "https://youtu.be/5lZ0iJMrUMk",
+                    code: `import java.util.*;
+
+class Solution {
+    private static void dfs(int node, int vis[], Stack<Integer> st,
+            ArrayList<ArrayList<Integer>> adj) {
+        vis[node] = 1;
+        for (int it : adj.get(node)) {
+            if (vis[it] == 0)
+                dfs(it, vis, st, adj);
+        }
+        st.push(node);
+    }
+
+    // Function to return list containing vertices in Topological order.
+    static int[] topoSort(int V, ArrayList<ArrayList<Integer>> adj) {
+        int vis[] = new int[V];
+        Stack<Integer> st = new Stack<Integer>();
+        for (int i = 0; i < V; i++) {
+            if (vis[i] == 0) {
+                dfs(i, vis, st, adj);
+            }
+        }
+
+        int ans[] = new int[V];
+        int i = 0;
+        while (!st.isEmpty()) {
+            ans[i++] = st.peek();
+            st.pop();
+        }
+        return ans;
+    }
+}
+
+public class tUf {
+    public static void main(String[] args) {
+        int V = 6;
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+        adj.get(2).add(3);
+        adj.get(3).add(1);
+        adj.get(4).add(0);
+        adj.get(4).add(1);
+        adj.get(5).add(0);
+        adj.get(5).add(2);
+
+        int[] ans = Solution.topoSort(V, adj);
+        for (int node : ans) {
+            System.out.print(node + " ");
+        }
+        System.out.println("");
+    }
+}
+    
+
+
+Output: 5 4 2 3 1 0
+
+Time Complexity: O(V+E)+O(V), where V = no. of nodes and E = no. of edges. There can be at most V components. So, another O(V) time complexity.
+
+Space Complexity: O(2N) + O(N) ~ O(2N): O(2N) for the visited array and the stack carried during DFS calls and O(N) for recursive stack space, where N = no. of nodes.
+
+`,
+                    AdditionalResources: [
+                        {
+                            leetcode: "https://www.geeksforgeeks.org/problems/topological-sort/1",
+                            gfg: "https://www.geeksforgeeks.org/dsa/topological-sorting/",
+                            VisuAlgo: "https://visualgo.net/en/graphds",
+                            youtubePlaylist: "https://www.youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn",
+                        },
+                    ]
+                },
+                {
+                    Topic: "Kahn's Algorithm",
+                    content: [
+                        {
+                            heading: "Kahn's Algorithm | Topological Sort Algorithm",
+                            content: [
+                                {
+                                    subheading: "Problem Statement:",
+                                    para: "Given a Directed Acyclic Graph (DAG) with V vertices and E edges, Find any Topological Sorting of that Graph."
+                                },
+                                {
+                                    subheading: "Note:",
+                                    para: "In topological sorting, node u will always appear before node v if there is a directed edge from node u towards node v(u -> v)."
+                                },
+                                {
+                                    subheading: "Examples",
+                                    image: "/static/Graph55.png"
+                                },
+                                {
+                                    image: "/static/Graph56.png"
+                                },
+                                {
+                                    subheading: "Solution",
+                                    para: "Topological sorting only exists in Directed Acyclic Graph (DAG). If the nodes of a graph are connected through directed edges and the graph does not contain a cycle, it is called a directed acyclic graph(DAG). \n\n The topological sorting of a directed acyclic graph is nothing but the linear ordering of vertices such that if there is an edge between node u and v(u -> v), node u appears before v in that ordering. \n\n Now, let's understand Why topological sort only exists in DAG: \n\n -> Case 1 (If the edges are undirected): If there is an undirected edge between node u and v, it signifies that there is an edge from node u to v(u -> v) as well as there is an edge from node v to u(v -> u). But according to the definition of topological sorting, it is practically impossible to write such ordering where u appears before v and v appears before u simultaneously. So, it is only possible for directed edges. \n\n -> Case 2(If the directed graph contains a cycle): The following directed graph contains a cycle:",
+                                    image: "/static/Graph59.png"
+                                },
+                                {
+                                    subheading: "Approach",
+                                    para: "Previously, we solved this question using the DFS traversal technique. But in this article,  we will apply the BFS(Breadth First Search) traversal technique. Breadth First Search or BFS is a traversal technique where we visit the nodes level-wise, i.e., it visits the same level nodes simultaneously, and then moves to the next level."
+                                },
+                                {
+                                    subheading: "Initial Configuration",
+                                    para: "Indegree Array: Initially all elements are set to 0. Then, We will count the incoming edges for a node and store it in this array. For example, if indegree of node 3 is 2, indegree[3] = 2. \n\n -> Queue: As we will use BFS, a queue is required. Initially, the node with indegree 0 will be pushed into the queue. \n\n -> Answer array: Initially empty and is used to store the linear ordering."
+                                },
+                                {
+                                    subheading: "The algorithm steps are as follows:",
+                                    para: "First, we will calculate the indegree of each node and store it in the indegree array. We can iterate through the given adj list, and simply for every node u->v, we can increase the indegree of v by 1 in the indegree array. \n\n  -> Initially, there will be always at least a single node whose indegree is 0. So, we will push the node(s) with indegree 0 into the queue. \n\n -> Then, we will pop a node from the queue including the node in our answer array, and for all its adjacent nodes, we will decrease the indegree of that node by one. For example, if node u that has been popped out from the queue has an edge towards node v(u->v), we will decrease indegree[v] by 1. \n\n -> After that, if for any node the indegree becomes 0, we will push that node again into the queue. \n\n -> We will repeat steps 3 and 4 until the queue is completely empty. Finally, completing the BFS we will get the linear ordering of the nodes in the answer array.",
+                                },
+                                {
+                                    subheading: "Let’s understand how to find the indegree(s): ",
+                                    para: "By visiting the adjacency list, we can find out the indegrees for each node. For example, if node 3 is an adjacent node of node 2, we will just increase indegree[3] by 1 as the adjacency list suggests that node 3 has an incoming edge from node 2. \n\n Note: If you wish to see the dry run of the above approach, you can watch the video attached to this article. \n\n Let’s quickly understand the algorithm using the below graph:",
+                                    image: "/static/Graph60.png",
+                                },
+                                {
+                                    image: "/static/Graph61.png",
+                                }
+                            ]
+                        }
+                    ],
+                    video: "https://youtu.be/73sneFXuTEg",
+                    code: `import java.util.*;
+
+class Solution {
+    // Function to return list containing vertices in Topological order.
+    static int[] topoSort(int V, ArrayList<ArrayList<Integer>> adj) {
+        int indegree[] = new int[V];
+        for (int i = 0; i < V; i++) {
+            for (int it : adj.get(i)) {
+                indegree[it]++;
+            }
+        }
+
+        Queue<Integer> q = new LinkedList<Integer>();
+        ;
+        for (int i = 0; i < V; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+
+        int topo[] = new int[V];
+        int i = 0;
+        while (!q.isEmpty()) {
+            int node = q.peek();
+            q.remove();
+            topo[i++] = node;
+            // node is in your topo sort
+            // so please remove it from the indegree
+
+            for (int it : adj.get(node)) {
+                indegree[it]--;
+                if (indegree[it] == 0) {
+                    q.add(it);
+                }
+            }
+        }
+
+        return topo;
+    }
+}
+
+public class tUf {
+    public static void main(String[] args) {
+        int V = 6;
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+        adj.get(2).add(3);
+        adj.get(3).add(1);
+        adj.get(4).add(0);
+        adj.get(4).add(1);
+        adj.get(5).add(0);
+        adj.get(5).add(2);
+
+        int[] ans = Solution.topoSort(V, adj);
+        for (int node : ans) {
+            System.out.print(node + " ");
+        }
+        System.out.println("");
+    }
+}
+
+    
+
+
+Output: 4 5 0 2 3 1
+
+Time Complexity: O(V+E), where V = no. of nodes and E = no. of edges. This is a simple BFS algorithm.
+
+Space Complexity: O(N) + O(N) ~ O(2N), O(N) for the indegree array, and O(N) for the queue data structure used in BFS(where N = no.of nodes).
+
+
+
+`,
+                    AdditionalResources: [
+                        {
+                            leetcode: "https://www.geeksforgeeks.org/problems/topological-sort/1",
+                            gfg: "https://www.geeksforgeeks.org/dsa/topological-sorting-indegree-based-solution/",
+                            VisuAlgo: "https://visualgo.net/en/graphds",
+                            youtubePlaylist: "https://www.youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn",
+                        },
+                    ]
+                },
+                {
+                    Topic: "Course Schedule I",
+                    content: [
+                        {
+                            heading: "Course Schedule I",
+                            content: [
+                                {
+                                    subheading: "Problem Statement I (Course Schedule):",
+                                    para: "There are a total of n tasks you have to pick, labeled from 0 to n-1. Some tasks may have prerequisites tasks, for example, to pick task 0 you have to first finish tasks 1, which is expressed as a pair: [0, 1] \n\n Given the total number of n tasks and a list of prerequisite pairs of size m. Find the order of tasks you should pick to finish all tasks. \n\n Note: There may be multiple correct orders, you need to return one of them. If it is impossible to finish all tasks, return an empty array."
+                                },
+                                {
+                                    subheading: "Problem Statement II (Pre-requisite Tasks): ",
+                                    para: "There are a total of N tasks, labeled from 0 to N-1. Some tasks may have prerequisites, for example, to do task 0 you have to first complete task 1, which is expressed as a pair: [0, 1] \n\n Given the total number of tasks N and a list of prerequisite pairs P, find if it is possible to finish all tasks."
+                                },
+                                {
+                                    subheading: "Notes:",
+                                    para: "These two questions are linked. The second question asks if it is possible to finish all the tasks and the first question states to return the ordering of the tasks if it is possible to perform all the tasks, otherwise return an empty array."
+                                },
+                                {
+                                    subheading: "Examples",
+                                    image: "/static/Graph62.png"
+                                },
+                                {
+                                    image: "/static/Graph63.png"
+                                },
+                                {
+                                    subheading: "Solution",
+                                    para: "The solutions will be similar for both questions as we need to check for one, and in the other, we need to print the order. The questions state that the given pairs signify the dependencies of tasks. For example, the pair {u, v} signifies that to perform task v, first we need to finish task u. Now, if we closely observe, we can think of a directed edge between u and v(u -> v) where u and v are two nodes. Now, if we can think of each task as a node and every pair as a directed edge between those two nodes, the whole problem becomes a graph problem. \n\n Now, let’s analyze the examples from the graph point of view: \n\n For example 1, the number of tasks(considered as nodes) is 4, and pairs(considered as edges) are 3. If we draw the graph accordingly, the following illustration is produced:",
+                                    image: "/static/Graph64.png"
+                                },
+                                {
+                                    para: "Analyzing the graphs, we can conclude that performing all the tasks from the first set is possible because the first graph does not contain any cycle but as the second graph contains a cycle, performing all the tasks from the second set is impossible(there exists a cyclic dependency between the tasks). So, first, we need to identify a graph as a directed acyclic graph and if it is so we need to find out the linear ordering of the nodes as well(second part for the question: Course schedule). \n\n Now, we have successfully reduced the problem to one of our known concepts: Detect cycle in a directed graph. We will solve this problem using the Topological Sort Algorithm or Kahn’s Algorithm. \n\n Topological sorting only exists in Directed Acyclic Graph (DAG). If the nodes of a graph are connected through directed edges and the graph does not contain a cycle, it is called a directed acyclic graph(DAG). \n\n The topological sorting of a directed acyclic graph is nothing but the linear ordering of vertices such that if there is an edge between node u and v(u -> v), node u appears before v in that ordering. \n\n For the second problem, we can also apply the algorithm used in the detection of cycles in a directed graph (using DFS) where we used to find out if the graph has a cycle or not. But to solve the first question we have to figure out the linear ordering of the task as well. So, we will use the topological sort algorithm for both questions.",
+                                },
+                                {
+                                    subheading: "Initial",
+                                    para: "For problem I, the intuition is to find the linear ordering in which the tasks will be performed if it is possible to perform all the tasks otherwise, to return an empty array. \n\n For problem II, the intuition is to find if it is possible to perform all the tasks(i.e. The graph contains a cycle or not)."
+                                },
+                                {
+                                    subheading: "Approach",
+                                    para: "We will apply the BFS(Breadth First Search) traversal technique. Breadth First Search or BFS is a traversal technique where we visit the nodes level-wise, i.e., it visits the same level nodes simultaneously, and then moves to the next level.",
+                                },
+                                {
+                                    subheading: "Initial Configuration",
+                                    para: "Indegree Array: Initially all elements are set to 0. Then, We will count the incoming edges for a node and store it in this array. For example, if the indegree of node 3 is 2, indegree[3] = 2. \n\n -> Queue: As we will use BFS, a queue is required. Initially, the node with indegree 0 will be pushed into the queue. \n\n -> Answer array: Initially empty and is used to store the linear ordering."
+                                },
+                                {
+                                    subheading: "The algorithm steps are as follows:",
+                                    para: "-> First, we will form the adjacency list of the graph using the pairs. For example, for the pair {u, v} we will add node v as an adjacent node of u in the list. \n\n ->Then, we will calculate the in-degree of each node and store it in the indegree array. We can iterate through the given adj list, and simply for every node u->v, we can increase the indegree of v by 1 in the indegree array. \n\n -> Initially, there will be always at least a single node whose indegree is 0. So, we will push the node(s) with indegree 0 into the queue. \n\n -> Then, we will pop a node from the queue including the node in our answer array, and for all its adjacent nodes, we will decrease the indegree of that node by one. For example, if node u that has been popped out from the queue has an edge towards node v(u->v), we will decrease indegree[v] by 1. \n\n -> After that, if for any node the indegree becomes 0, we will push that node again into the queue. \n\n -> We will repeat steps 3 and 4 until the queue is completely empty. Now, completing the BFS we will get the linear ordering of the nodes in the answer array. \n\n -> For the first problem(Course Schedule): We will return the answer array if the length of the ordering equals the number of tasks. Otherwise, we will return an empty array. \n\n -> For the Second problem(Prerequisite tasks): We will return true if the length of the ordering equals the number of tasks. otherwise, we will return false. \n\n Note: If you wish to see the dry run of the above approach, you can watch the video attached to this article."
+                                },
+                            ]
+                        }
+                    ],
+                    video: "https://youtu.be/WAOfKpxYHR8",
+                    code: `
+                    
+import java.util.*;
+
+class Solution {
+    static int[] findOrder(int n, int m, ArrayList<ArrayList<Integer>> prerequisites) {
+        // Form a graph
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < m; i++) {
+            adj.get(prerequisites.get(i).get(1)).add(prerequisites.get(i).get(0));
+        }
+
+
+
+        int indegree[] = new int[n];
+        for (int i = 0; i < n; i++) {
+            for (int it : adj.get(i)) {
+                indegree[it]++;
+            }
+        }
+
+
+        Queue<Integer> q = new LinkedList<Integer>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+
+
+        int topo[] = new int[n];
+        int ind = 0;
+        // o(v + e)
+        while (!q.isEmpty()) {
+            int node = q.peek();
+
+            q.remove();
+            topo[ind++] = node;
+            // node is in your topo sort
+            // so please remove it from the indegree
+
+            for (int it : adj.get(node)) {
+                indegree[it]--;
+                if (indegree[it] == 0) q.add(it);
+            }
+        }
+
+
+        if (ind == n) return topo;
+        int[] arr = {};
+        return arr;
+    }
+}
+
+public class tUf {
+    public static void main(String[] args) {
+        int N = 4;
+        int M = 3;
+        ArrayList<ArrayList<Integer>> prerequisites = new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            prerequisites.add(i, new ArrayList<>());
+        }
+
+
+        prerequisites.get(0).add(0);
+        prerequisites.get(0).add(1);
+
+        prerequisites.get(1).add(1);
+        prerequisites.get(1).add(2);
+
+        prerequisites.get(2).add(2);
+        prerequisites.get(2).add(3);
+
+        int[] ans = Solution.findOrder(N, M, prerequisites);
+
+        for (int task : ans) {
+            System.out.print(task + " ");
+        }
+        System.out.println("");
+    }
+}
+
+Output: 3 2 1 0
+
+
+
+--------------------------------------------
+|        Code (Pre-requisite Tasks):       |
+--------------------------------------------
+
+import java.util.*;
+
+
+class Solution {
+    public boolean isPossible(int V, int[][] prerequisites) {
+        // Form a graph
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+        int m = prerequisites.length;
+        for (int i = 0; i < m; i++) {
+            adj.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+
+
+
+        int indegree[] = new int[V];
+        for (int i = 0; i < V; i++) {
+            for (int it : adj.get(i)) {
+                indegree[it]++;
+            }
+        }
+
+
+        Queue<Integer> q = new LinkedList<Integer>();
+        for (int i = 0; i < V; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+
+
+        List<Integer> topo = new ArrayList<Integer>();
+        // o(v + e)
+        while (!q.isEmpty()) {
+            int node = q.peek();
+
+            q.remove();
+            topo.add(node);
+            // node is in your topo sort
+            // so please remove it from the indegree
+
+            for (int it : adj.get(node)) {
+                indegree[it]--;
+                if (indegree[it] == 0) q.add(it);
+            }
+        }
+
+
+        if (topo.size() == V) return true;
+        return false;
+
+    }
+
+}
+
+public class tUf {
+    public static void main(String[] args) {
+        int N = 4;
+        int[][] prerequisites = new int[3][2];
+        prerequisites[0][0] = 1;
+        prerequisites[0][1] = 0;
+
+        prerequisites[1][0] = 2;
+        prerequisites[1][1] = 1;
+
+        prerequisites[2][0] = 3;
+        prerequisites[2][1] = 2;
+
+        Solution obj = new Solution();
+        boolean ans = obj.isPossible(N, prerequisites);
+        if (ans)
+            System.out.println("YES");
+        else
+            System.out.println("NO");
+    }
+}
+
+
+
+
+Output: YES
+
+Time Complexity: O(V+E), where V = no. of nodes and E = no. of edges. This is a simple BFS algorithm.
+
+Space Complexity: O(N) + O(N) ~ O(2N), O(N) for the indegree array, and O(N) for the queue data structure used in BFS(where N = no.of nodes). Extra O(N) for storing the topological sorting. Total ~ O(3N).
+
+
+`,
+                    AdditionalResources: [
+                        {
+                            leetcode: "https://leetcode.com/problems/course-schedule/description/",
+                            gfg: "https://www.geeksforgeeks.org/competitive-programming/cses-solutions-course-schedule/",
+                            VisuAlgo: "https://visualgo.net/en/graphds",
+                            youtubePlaylist: "https://www.youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn",
+                        },
+                    ]
+                },
+                {
+                    Topic: "Find Eventual Safe States - BFS",
+                    content: [
+                        {
+                            heading: "Course Schedule I",
+                            content: [
+                                {
+                                    subheading: "Problem Statement I (Course Schedule):",
+                                    para: "A directed graph of V vertices and E edges is given in the form of an adjacency list adj. Each node of the graph is labeled with a distinct integer in the range 0 to V - 1. A node is a terminal node if there are no outgoing edges. A node is a safe node if every possible path starting from that node leads to a terminal node. You have to return an array containing all the safe nodes of the graph. The answer should be sorted in ascending order.",
+                                },
+                                {
+                                    subheading: "Examples",
+                                    image: "/static/Graph65.png"
+                                },
+                                {
+                                    image: "/static/Graph66.png"
+                                },
+                                {
+                                    subheading: "Solution",
+                                    para: "A terminal node is a node without any outgoing edges(i.e outdegree = 0). Now a node is considered to be a safe node if all possible paths starting from it lead to a terminal node. Here we need to find out all safe nodes and return them sorted in ascending order. If we closely observe, all possible paths starting from a node are going to end at some terminal node unless there exists a cycle and the paths return back to themselves. Let’s understand it considering the below graph:",
+                                    image: "/static/Graph67.png"
+                                },
+                                {
+                                    para: "So, the intuition is to figure out the nodes which are neither a part of a cycle nor connected to the cycle. We have previously solved this problem using the DFS traversal technique. Now, we are going to solve it using the BFS traversal technique especially using the topological sort algorithm. The topological sort algorithm will automatically exclude the nodes which are either forming a cycle or connected to a cycle. Note: Points to remember that any node which is a part of a cycle or leads to the cycle through an incoming edge towards the cycle, cannot be a safe node. Apart from these types of nodes, every node is a safe node.",
+                                },
+                                {
+                                    subheading: "Approach",
+                                    para: "The node with outdegree 0 is considered to be a terminal node but the topological sort algorithm deals with the indegrees of the nodes. So, to use the topological sort algorithm, we will reverse every edge of the graph. Now, the nodes with indegree 0 become the terminal nodes. After this step, we will just follow the topological sort algorithm as it is.",
+                                    image: "/static/Graph68.png"
+                                },
+                                {
+                                    para: "We will apply the BFS(Breadth First Search) traversal technique. Breadth First Search or BFS is a traversal technique where we visit the nodes level-wise, i.e., it visits the same level nodes simultaneously, and then moves to the next level.",
+                                },
+                                {
+                                    subheading: "Initial Configuration",
+                                    para: "Indegree Array: Initially all elements are set to 0. Then, We will count the incoming edges for a node and store it in this array. For example, if indegree of node 3 is 2, indegree[3] = 2. If you don’t know how to find indegrees, you can refer to the step 2 in the algorithm. \n\n Queue: As we will use BFS, a queue is required. Initially, the node with indegree 0 will be pushed into the queue.",
+                                },
+                                {
+                                    subheading: "The Algorithm steps are as follows:",
+                                    para: "-> First, we will reverse all the edges of the graph so that we can apply the topological sort algorithm afterward. \n\n -> Then, we will calculate the indegree of each node and store it in the indegree array. We can iterate through the given adj list, and simply for every node u->v, we can increase the indegree of v by 1 in the indegree array \n\n -> Then, we will push the node(s) with indegree 0 into the queue. \n\n -> Then, we will pop a node from the queue including the node in our safeNodes array, and for all its adjacent nodes, we will decrease the indegree of that node by one. For example, if node u that has been popped out from the queue has an edge towards node v(u->v), we will decrease indegree[v] by 1. \n\n -> After that, if for any node the indegree becomes 0, we will push that node again into the queue. \n\n -> We will repeat steps 3 and 4 until the queue is completely empty. Finally, completing the BFS we will get the linear ordering of the nodes in the safeNodes array. \n\n -> Finally, the safeNodes array will only consist of the nodes that are neither a part of any cycle nor connected to any cycle. Then we will sort the final safeNodes array as the question requires the answer in sorted order. \n\n -> Note: If you wish to see the dry run of the above approach, you can watch the video attached to this article."
+                                },
+                            ]
+                        }
+                    ],
+                    video: "https://youtu.be/2gtg3VsDGyc",
+                    code: `
+                    
+import java.util.*;
+
+
+class Solution {
+    List<Integer> eventualSafeNodes(int V, List<List<Integer>> adj) {
+        List<List<Integer>> adjRev = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adjRev.add(new ArrayList<>());
+        }
+        int indegree[] = new int[V];
+        for (int i = 0; i < V; i++) {
+            // i -> it
+            // it -> i
+            for (int it : adj.get(i)) {
+                adjRev.get(it).add(i);
+                indegree[i]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        List<Integer> safeNodes = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+
+        while (!q.isEmpty()) {
+            int node = q.peek();
+            q.remove();
+            safeNodes.add(node);
+            for (int it : adjRev.get(node)) {
+                indegree[it]--;
+                if (indegree[it] == 0) q.add(it);
+            }
+        }
+        Collections.sort(safeNodes);
+        return safeNodes;
+    }
+}
+
+public class tUf {
+    public static void main(String[] args) {
+        int V = 12;
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+        adj.get(0).add(1);
+        adj.get(1).add(2);
+        adj.get(2).add(3);
+        adj.get(2).add(4);
+        adj.get(3).add(4);
+        adj.get(3).add(5);
+        adj.get(4).add(6);
+        adj.get(5).add(6);
+        adj.get(6).add(7);
+        adj.get(8).add(1);
+        adj.get(8).add(9);
+        adj.get(9).add(10);
+        adj.get(10).add(8);
+        adj.get(11).add(9);
+
+        Solution obj = new Solution();
+        List<Integer> safeNodes = obj.eventualSafeNodes(V, adj);
+
+        for (int node : safeNodes) {
+            System.out.print(node + " ");
+        }
+        System.out.println("");
+    }
+}
+
+
+Output : 0 1 2 3 4 5 6 7
+
+Time Complexity: O(V+E)+O(N*logN), where V = no. of nodes and E = no. of edges. This is a simple BFS algorithm. Extra O(N*logN) for sorting the safeNodes array, where N is the number of safe nodes.
+
+Space Complexity: O(N) + O(N) + O(N) ~ O(3N), O(N) for the indegree array, O(N) for the queue data structure used in BFS(where N = no.of nodes), and extra O(N) for the adjacency list to store the graph in a reversed order.
+
+
+
+
+`,
+                    AdditionalResources: [
+                        {
+                            leetcode: "https://leetcode.com/problems/find-eventual-safe-states/description/",
+                            gfg: "https://www.geeksforgeeks.org/dsa/eventual-safe-states/",
+                            VisuAlgo: "https://visualgo.net/en/graphds",
+                            youtubePlaylist: "https://www.youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn",
+                        },
+                    ]
+                },
+                {
+                    Topic: "Alien Dictionary",
+                    content: [
+                        {
+                            heading: "Alien Dictionary",
+                            content: [
+                                {
+                                    subheading: "Problem Statement",
+                                    para: "Given a sorted dictionary of an alien language having N words and k starting alphabets of a standard dictionary. Find the order of characters in the alien language \n\n Note: Many orders may be possible for a particular test case, thus you may return any valid order.",
+                                },
+                                {
+                                    subheading: "Examples",
+                                    image: "/static/Graph69.png"
+                                },
+                                {
+                                    image: "/static/Graph70.png"
+                                },
+                                {
+                                    subheading: "Solution",
+                                    image: "/static/Graph71.png"
+                                },
+                                {
+                                    image: "/static/Graph72.png"
+                                },
+                                {
+                                    subheading: "The follow-up question for the interview:",
+                                    para: "When is the ordering not possible? \n\n There are two such cases when ordering is not possible: \n\n -> If every character matches and the largest word appears before the shortest word: For example, if “abcd” appears before “abc”, we can say the ordering is not possible. \n\n -> If there exists a cyclic dependency between the characters: For example, in the dictionary: dict: {“abc”, “bat”, “ade”} there exists a cyclic dependency between ‘a’ and ‘b’ because the dictionary states ‘a’ < ‘b’ < ‘a’, which is not possible.",
+                                },
+                                {
+                                    subheading: "Approach",
+                                    para: "We will apply the BFS(Breadth First Search) traversal technique. Breadth First Search or BFS is a traversal technique where we visit the nodes level-wise, i.e., it visits the same level nodes simultaneously, and then moves to the next level.",
+                                },
+                                {
+                                    subheading: "Initial Configuration",
+                                    para: "-> Adjacency List: Initially it will be empty and we will create this adjacency list comparing the consecutive pair of words. \n\n -> Indegree Array: Initially all elements are set to 0. Then, We will count the incoming edges for a node and store it in this array. For example, if the indegree of node 3 is 2, indegree[3] = 2. \n\n -> Queue: As we will use BFS, a queue is required. Initially, the node with indegree 0 will be pushed into the queue. \n\n -> Answer array(topo): Initially empty and is used to store the linear ordering.",
+                                },
+                                {
+                                    subheading: "The Algorithm steps are as follows:",
+                                    image: "/static/Graph73.png"
+                                },
+                            ]
+                        }
+                    ],
+                    video: "https://youtu.be/U3N_je7tWAs",
+                    code: `
+                    
+import java.util.*;
+
+
+class Solution {
+    private List<Integer> topoSort(int V, List<List<Integer>> adj) {
+        int indegree[] = new int[V];
+        for (int i = 0; i < V; i++) {
+            for (int it : adj.get(i)) {
+                indegree[it]++;
+            }
+        }
+
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < V; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        List<Integer> topo = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int node = q.peek();
+            q.remove();
+            topo.add(node);
+            // node is in your topo sort
+            // so please remove it from the indegree
+
+            for (int it : adj.get(node)) {
+                indegree[it]--;
+                if (indegree[it] == 0) q.add(it);
+            }
+        }
+
+        return topo;
+    }
+    public String findOrder(String [] dict, int N, int K) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < K; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+
+        for (int i = 0; i < N - 1; i++) {
+            String s1 = dict[i];
+            String s2 = dict[i + 1];
+            int len = Math.min(s1.length(), s2.length());
+            for (int ptr = 0; ptr < len; ptr++) {
+                if (s1.charAt(ptr) != s2.charAt(ptr)) {
+                    adj.get(s1.charAt(ptr) - 'a').add(s2.charAt(ptr) - 'a');
+                    break;
+                }
+            }
+        }
+
+        List<Integer> topo = topoSort(K, adj);
+        String ans = "";
+        for (int it : topo) {
+            ans = ans + (char)(it + (int)('a'));
+        }
+
+        return ans;
+
+    }
+}
+
+public class tUf {
+    public static void main(String[] args) {
+        int N = 5, K = 4;
+        String[] dict = {"baa", "abcd", "abca", "cab", "cad"};
+        Solution obj = new Solution();
+        String ans = obj.findOrder(dict, N, K);
+
+        for (int i = 0; i < ans.length(); i++) {
+            System.out.print(ans.charAt(i) + " ");
+        }
+        System.out.println("");
+    }
+}
+
+
+Output: b d a c 
+
+Time Complexity: O(N*len)+O(K+E), where N is the number of words in the dictionary, ‘len’ is the length up to the index where the first inequality occurs, K = no. of nodes, and E = no. of edges.
+
+Space Complexity: O(K) + O(K)+O(K)+O(K) ~ O(4K), O(K) for the indegree array, and O(K) for the queue data structure used in BFS(where K = no.of nodes), O(K) for the answer array and O(K) for the adjacency list used in the algorithm.
+`,
+                    AdditionalResources: [
+                        {
+                            leetcode: "https://leetcode.com/problems/alien-dictionary/editorial/",
+                            gfg: "https://www.geeksforgeeks.org/dsa/given-sorted-dictionary-find-precedence-characters/",
+                            VisuAlgo: "https://visualgo.net/en/graphds",
+                            youtubePlaylist: "https://www.youtube.com/playlist?list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn",
+                        },
+                    ]
+                },
+            ]
+        },
     ],
 };
 
