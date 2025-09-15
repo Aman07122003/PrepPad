@@ -127,7 +127,7 @@ class Graph {
 
     public Graph(int vertices) {
         this.vertices = vertices;
-        adjacencyList = new LinkedList[vertices];
+        adjacencyList = new LinkedLst[vertices];
         for (int i = 0; i < vertices; i++) {
             adjacencyList[i] = new LinkedList<>();
         }
