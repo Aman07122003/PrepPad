@@ -1471,7 +1471,7 @@ Space Complexity: O(2N) + O(N) ~ O(2N): O(2N) for the visited array and the stac
                             ]
                         }
                     ],
-                    video: "https://youtu.be/73sneFXuTEg",
+                    video: "https://youtu.be/XMiIk1B0v-w",
                     code: `import java.util.*;
 
 class Solution {
