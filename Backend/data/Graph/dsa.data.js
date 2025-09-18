@@ -1312,7 +1312,7 @@ Space Complexity: O(N) + O(N) ~ O(N), Space for queue data structure and visited
                     Topic: "Topo Sort",
                     content: [
                         {
-                            heading: "Topological Sort Algorithm",
+                            heading: "Topological Sort Algorithm with (DFS & Stack)",
                             content: [
                                 {
                                     subheading: "Problem Statement:",
@@ -1426,7 +1426,7 @@ Space Complexity: O(2N) + O(N) ~ O(2N): O(2N) for the visited array and the stac
                     Topic: "Kahn's Algorithm",
                     content: [
                         {
-                            heading: "Kahn's Algorithm | Topological Sort Algorithm",
+                            heading: "Kahn's Algorithm | Topological Sort Algorithm with (BFS & Queue)",
                             content: [
                                 {
                                     subheading: "Problem Statement:",
