@@ -5,7 +5,7 @@ import { PlusCircle, FileDown, Pencil, Trash2, ChevronDown, ChevronUp, Filter, X
 import {
   getAllNotes,
   deleteNote,
-} from '../api/Notes.api.js';
+} from '../../../api/Notes.api';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';

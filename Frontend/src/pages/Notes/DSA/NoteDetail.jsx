@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { dsaNotes } from '../api/Notes.api';
+import { dsaNotes } from '../../../api/Notes.api';
 import { useLocation } from 'react-router-dom';
 import { Code, Files, ArrowLeft, ArrowRight, Youtube, BookOpen, ExternalLink, Layers, DraftingCompass } from 'lucide-react';
 import jsPDF from "jspdf";

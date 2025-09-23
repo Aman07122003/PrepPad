@@ -1,17 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home.jsx';
-import Notes from './pages/Notes.jsx';
-import CreateNote from './pages/CreateNote.jsx';
-import NoteDetail from './pages/NoteDetail.jsx';
-import Canva from './pages/Canva.jsx';
+import Notes from './pages/Notes/DSA/Notes.jsx';
+import CreateNote from './pages/Notes/DSA/CreateNote.jsx';
+import NoteDetail from './pages/Notes/DSA/NoteDetail.jsx';
+import Canva from './pages/Notes/DSA/Canva.jsx';
+import Menu  from './pages/Menu.jsx';
 
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home/>} />
-        <Route path='/notes' element={<Notes/>}/>
+        <Route path="/menu" element={<Menu/>}/>
+        <Route path='/notes/dsa' element={<Notes/>}/>
         <Route path='/notes/new' element={<CreateNote/>}/>
         <Route path="/notes/:category/:subCategory/:question" element={<NoteDetail />} />
         <Route path='/canva' element={<Canva/>}/>

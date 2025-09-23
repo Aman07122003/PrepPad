@@ -1,31 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar/Navbar";
 
 const Home = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
-      <nav className="bg-white shadow-md py-4 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-8 flex justify-between items-center">
-          <Link to="/" className="text-xl font-bold text-blue-600 flex items-center gap-2">
-            <i className="fas fa-brain"></i> DSA Master
-          </Link>
-          <div className="flex items-center gap-8">
-            <Link to="/" className="text-gray-500 font-medium hover:text-blue-600 transition-colors">
-              Home
-            </Link>
-            <Link to="/notes" className="text-gray-500 font-medium hover:text-blue-600 transition-colors">
-              Notes
-            </Link>
-            <Link to="/notes/new" className="text-gray-500 font-medium hover:text-blue-600 transition-colors">
-              Create Note
-            </Link>
-            <button className="bg-blue-600 text-white py-2 px-4 rounded font-medium hover:bg-blue-800 transition-colors">
-              Sign In
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Navbar/>
 
       {/* Hero Section */}
       <section className="max-w-6xl mx-auto px-8 py-8 flex items-center gap-12 min-h-[80vh]">
@@ -37,7 +18,7 @@ const Home = () => {
             Interactive learning platform with detailed notes, visualizations, and practice problems to help you master DSA concepts.
           </p>
           <div className="flex gap-4">
-            <Link to="/notes" className="bg-blue-600 text-white py-3 px-6 rounded font-medium flex items-center gap-2 hover:bg-blue-800 transition-colors hover:-translate-y-0.5">
+            <Link to="/menu" className="bg-blue-600 text-white py-3 px-6 rounded font-medium flex items-center gap-2 hover:bg-blue-800 transition-colors hover:-translate-y-0.5">
               Explore Notes <i className="fas fa-arrow-right"></i>
             </Link>
             <Link to="/notes/new" className="bg-transparent text-blue-600 border border-blue-600 py-3 px-6 rounded font-medium flex items-center gap-2 hover:bg-gray-50 transition-colors hover:-translate-y-0.5">

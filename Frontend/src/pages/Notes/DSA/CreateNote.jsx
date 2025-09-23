@@ -1,13 +1,13 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { createNote } from "../api/Notes.api";
+import { createNote } from "../../../api/Notes.api";
 import { X, Upload } from "lucide-react";
-import Header from "../components/Notes/Header";
-import MetaFields from "../components/Notes/MetaFields";
-import TagInput from "../components/Notes/TagInput";
-import SourceInput from "../components/Notes/SourceInput";
-import SubmitButton from "../components/Notes/SubmitButton";
+import Header from "../../../components/Notes/Header";
+import MetaFields from "../../../components/Notes/MetaFields";
+import TagInput from "../../../components/Notes/TagInput";
+import SourceInput from "../../../components/Notes/SourceInput";
+import SubmitButton from "../../../components/Notes/SubmitButton";
 
 const CreateNote = () => {
   const navigate = useNavigate();

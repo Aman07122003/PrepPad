@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { saveCanvasImage, loadCanvasImage } from '../api/Canva.api';
+import { saveCanvasImage, loadCanvasImage } from '../../../api/Canva.api';
 
 const Canva = (noteId) => {
   const canvasRef = useRef(null);
