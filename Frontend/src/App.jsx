@@ -6,6 +6,7 @@ import CreateNote from './pages/Notes/DSA/CreateNote.jsx';
 import NoteDetail from './pages/Notes/DSA/NoteDetail.jsx';
 import Canva from './pages/Notes/DSA/Canva.jsx';
 import Menu  from './pages/Menu.jsx';
+import Login from './components/Auth/Login.jsx';
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/menu" element={<Menu/>}/>
+        <Route path="/login" element={<Login/>}/>
         <Route path='/notes/dsa' element={<Notes/>}/>
         <Route path='/notes/new' element={<CreateNote/>}/>
         <Route path="/notes/:category/:subCategory/:question" element={<NoteDetail />} />

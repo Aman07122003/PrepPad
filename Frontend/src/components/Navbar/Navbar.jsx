@@ -38,9 +38,13 @@ const Navbar = () => {
             >
               Create Note
             </Link>
-            <button className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium shadow hover:bg-blue-700 transition">
+            <button
+              onClick={() => window.location.href = '/login'}
+              className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium shadow hover:bg-blue-700 transition"
+            >
               Sign In
             </button>
+
           </div>
 
           {/* Mobile Menu Button */}
