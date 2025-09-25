@@ -80,7 +80,7 @@ const CreateNote = () => {
         alert("PDF uploaded at: " + response.data.data.pdfFile);
       }
   
-      navigate("/notes");
+      navigate("/notes/dsa");
     } catch (err) {
       console.log(err);
       alert(

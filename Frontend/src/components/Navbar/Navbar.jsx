@@ -1,9 +1,31 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Brain, Menu, X } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  // Get auth state from Redux
+  const { loading, status, userData } = useSelector((state) => ({
+    loading: state.auth?.loading || false,
+    status: state.auth?.status || false,
+    userData: state.auth?.userData || null,
+  }));
+
+  console.log("Auth state:", { loading, status, userData });
+
+  if (loading) {
+    return (
+      <nav className="bg-white shadow-md sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div>Loading...</div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -38,13 +60,25 @@ const Navbar = () => {
             >
               Create Note
             </Link>
-            <button
-              onClick={() => window.location.href = '/login'}
-              className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium shadow hover:bg-blue-700 transition"
-            >
-              Sign In
-            </button>
 
+            {/* ✅ Show avatar + name if logged in */}
+            {status && userData ? (
+              <div className="flex items-center gap-2">
+                <img
+                  src={userData?.picture || "/default-avatar.png"}
+                  alt="user avatar"
+                  className="w-8 h-8 rounded-full border shadow"
+                />
+                <span className="text-gray-700">{userData.name}</span>
+              </div>
+            ) : (
+              <button
+                onClick={() => (window.location.href = "/login")}
+                className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium shadow hover:bg-blue-700 transition"
+              >
+                Sign In
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -84,9 +118,25 @@ const Navbar = () => {
             >
               Create Note
             </Link>
-            <button className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium shadow hover:bg-blue-700 transition">
-              Sign In
-            </button>
+
+            {/* ✅ Avatar + Name in mobile menu */}
+            {status && userData ? (
+              <div className="flex items-center gap-2">
+                <img
+                  src={userData?.picture || "/default-avatar.png"}
+                  alt="user avatar"
+                  className="w-10 h-10 rounded-full border shadow cursor-pointer"
+                />
+                <span className="text-gray-700">{userData.name}</span>
+              </div>
+            ) : (
+              <button
+                onClick={() => (window.location.href = "/login")}
+                className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium shadow hover:bg-blue-700 transition"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       )}

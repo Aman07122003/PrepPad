@@ -8,12 +8,13 @@ import {
     getDSAContent,
 } from "../controllers/notes.controller.js";
 import { uploadPDF } from "../middleware/multer.middleware.js";
+import { verifyJWT } from "../middleware/auth.middleware.js";
 
 
 const router = express.Router();
 
 router.post("/", uploadPDF.single("pdfFile"), createNote);
-router.get("/", getAllNotes);
+router.route("/").get(getAllNotes);
 router.get("/:id/file", async (req, res) => {
     try {
       const note = await Note.findById(req.params.id);
@@ -29,6 +30,6 @@ router.get("/:id/file", async (req, res) => {
       res.status(500).send("Internal Server Error");
     }
 });
-router.delete("/:id", deleteNote);
-router.post("/dsa", getDSAContent);  
+router.route("/:id").get(deleteNote);
+router.route("/dsa").post(getDSAContent);  
 export default router;

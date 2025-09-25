@@ -2,7 +2,7 @@ import axiosInstance from "../../utils/axiosInstance";
 
 export const createNote = async (formData) => {
     try {
-      const response = await axiosInstance.post('/api/notes', formData, {
+      const response = await axiosInstance.post('/notes', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -15,7 +15,7 @@ export const createNote = async (formData) => {
 
 export const dsaNotes = async (data) => {
     try {
-        const response = await axiosInstance.post('/api/notes/dsa', data);
+        const response = await axiosInstance.post('/notes/dsa', data);
         return response.data;
     } catch (error) {
         throw error.response?.data || error;
@@ -25,7 +25,7 @@ export const dsaNotes = async (data) => {
 
 export const getAllNotes = async () => {
     try {
-        const response = await axiosInstance.get('/api/notes');
+        const response = await axiosInstance.get('/notes');
         return response.data;
     } catch (error) {
         throw error.response?.data || error;
@@ -34,7 +34,7 @@ export const getAllNotes = async () => {
 
 export const getNoteById = async (id) => {
     try {
-        const response = await axiosInstance.get(`/api/notes/${id}`);
+        const response = await axiosInstance.get(`/notes/${id}`);
         return response.data;
     } catch (error) {
         throw error.response?.data || error;
@@ -43,7 +43,7 @@ export const getNoteById = async (id) => {
 
 export const deleteNote = async (id) => {
     try {
-        const response = await axiosInstance.delete(`/api/notes/${id}`);
+        const response = await axiosInstance.delete(`/notes/${id}`);
         return response.data;
     } catch (error) {
         throw error.response?.data || error;
@@ -52,7 +52,7 @@ export const deleteNote = async (id) => {
 
 export const downloadNoteAsPDF = async (id) => {
     try {
-        const response = await axiosInstance.get(`/api/notes/${id}/download`, {
+        const response = await axiosInstance.get(`/notes/${id}/download`, {
             responseType: 'blob',
         });
         return response.data;
