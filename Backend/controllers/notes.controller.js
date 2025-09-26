@@ -56,17 +56,21 @@ const getDSAContent = async (req, res) => {
             return res.status(400).json(new APIError(400, "At least one of Section, Subsection, or Topic is required"));
         }
 
+        let section = null;
+        if(Section) {
+            section = data.find(sec => sec.Section.toLowerCase() === Section.toLowerCase());
+        }
         // Check if Section matches
-        if (Section && data.Section.toLowerCase() !== Section.toLowerCase()) {
+        if (!section) {
             return res.status(404).json(new APIError(404, "Section not found"));
         }
 
         // Find the subsection
         let subsectionData = null;
         if (Subsection) {
-            subsectionData = data.content.find(sub => sub.Subsection.toLowerCase() === Subsection.toLowerCase());
+            subsectionData = section.content.find(sub => sub.Subsection.toLowerCase() === Subsection.toLowerCase());
         } else {
-            subsectionData = data.content[0]; // Default to first subsection if none provided
+            subsectionData = section.content[0]; // Default to first subsection if none provided
         }
 
         if (!subsectionData) {

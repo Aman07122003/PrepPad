@@ -1,5 +1,7 @@
 // src/api/axios.js
 import axios from "axios";
+import store  from "../app/store.js";
+import { refreshToken } from "../src/app/Slices/authSlice.js";
 
 // ✅ Axios instance with environment-based base URL
 const axiosInstance = axios.create({
@@ -22,13 +24,22 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
       try {
-        await axiosInstance.post("/auth/refresh"); // your backend refresh route
-        return axiosInstance(error.config); // retry original request
+
+        await store.dispatch(refreshToken()).unwarap();
+        const newToken = localStorage.getItem("accessToken");
+
+        if(newToken){
+          originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+          return axiosInstance(originalRequest);
+        }
       } catch (refreshError) {
         console.error("Session expired, logging out...");
-        // dispatch(logout()) if using Redux
+        dispatch(logout());
+        window.location.href = "/login"; 
       }
     }
     return Promise.reject(error);

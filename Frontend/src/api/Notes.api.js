@@ -1,4 +1,5 @@
 import axiosInstance from "../../utils/axiosInstance";
+import axios from "axios";
 
 export const createNote = async (formData) => {
     try {

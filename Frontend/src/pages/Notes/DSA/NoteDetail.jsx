@@ -218,8 +218,8 @@ const NoteDetail = () => {
                         </p>
                         {item.image && (
                             <img 
-                                src={`${import.meta.env.VITE_API_BASE_URL}${item.image}`} 
-                                alt="Content visual" 
+                                src={`${import.meta.env.VITE_API_IMAGE_URL}${item.image}`} 
+                                alt={`${import.meta.env.VITE_API_BASE_URL}${item.image}`} 
                                 className="rounded-xl shadow-md mt-4 border border-gray-200"
                             />
                         )}

@@ -11,13 +11,18 @@ import Canva from './pages/Notes/DSA/Canva.jsx';
 import Menu  from './pages/Menu.jsx';
 import Login from './components/Auth/Login.jsx';
 import Navbar from './components/Navbar/Navbar.jsx';
+import { useSelector } from 'react-redux';
 
 const AppLayout = ({ children }) => {
   const dispatch = useDispatch();
+  const { status, loading } = useSelector(state => state.auth);
 
   useEffect(() => {
-    dispatch(fetchUser()); // ✅ fetch user once when app loads
+    const token = localStorage.getItem("accessToken");
+    if (token) dispatch(fetchUser()); // fetch user if token exists
   }, [dispatch]);
+
+  if (loading) return <div>Loading...</div>; // optional
 
   return (
     <>
@@ -26,6 +31,7 @@ const AppLayout = ({ children }) => {
     </>
   );
 };
+
 
 const App = () => {
   return (

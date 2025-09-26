@@ -5,7 +5,7 @@ import axiosInstance from "../../../utils/axiosInstance.js";
 const initialState = {
   loading: false,
   status: false,
-  userData: null,
+  userData: JSON.parse(localStorage.getItem("userData")) || null,
   accessToken: localStorage.getItem("accessToken") || null,
   refreshToken: localStorage.getItem("refreshToken") || null,
 };
@@ -32,9 +32,23 @@ export const logout = createAsyncThunk("auth/logout", async (_, { rejectWithValu
   }
 });
 
-export const fetchUser = createAsyncThunk("auth/me", async () => {
-  const response = await axiosInstance.get("/auth/me");
-  return response.data.user;
+export const refreshToken = createAsyncThunk("auth/refreshToken", async (_, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.post("/auth/refreshToken");
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || { message: "Session expired, please log in again." });
+  }
+});
+
+export const getCurrentUser = createAsyncThunk("auth/getCurrentUser", async (_, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.get("/auth/getCurrentUser");
+    console.log(response);
+    return response.data.user;
+  } catch (error) {
+    return rejectWithValue(error.response?.data) || { message: "Failed to fetch user data" };
+  }
 });
 
 
@@ -44,7 +58,7 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     // login
-    builder.addCase(login.pending, (state) => {
+      builder.addCase(login.pending, (state) => {
         state.loading = true;
       });
       
@@ -55,10 +69,10 @@ const authSlice = createSlice({
         state.userData = action.payload.user;
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
-        
-        // Store tokens in localStorage
+
         localStorage.setItem("accessToken", action.payload.accessToken);
         localStorage.setItem("refreshToken", action.payload.refreshToken);
+        localStorage.setItem("userData", JSON.stringify(action.payload.user));
       });
       
       // Login rejected
@@ -66,27 +80,72 @@ const authSlice = createSlice({
         state.loading = false;
         state.status = false;
         state.userData = null;
-      });
-    
+      })
 
     // logout
-    builder.addCase(logout.fulfilled, (state) => {
+      builder.addCase(logout.pending, (state) => {
+        state.loading = true;
+      });
+
+      builder.addCase(logout.fulfilled, (state) => {
+        state.status = false;
+        state.userData = null;
+        state.accessToken = null;
+        state.refreshToken = null;
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("userData");
+      });
+
+      builder.addCase(logout.rejected, (state) => {
+        state.loading = false;
+      });
+
+    //get current user  
+
+      builder.addCase(getCurrentUser.pending, (state) => {
+        state.loading = true;
+        state.status = false;
+      });
+
+      // getCurrentUser
+      builder.addCase(getCurrentUser.fulfilled, (state, action) => {
+        state.status = true;
+        state.userData = action.payload;
+        localStorage.setItem("userData", JSON.stringify(action.payload));
+        state.loading = false;
+      });
+
+    builder.addCase(getCurrentUser.rejected, (state) => {
       state.status = false;
       state.userData = null;
-      state.accessToken = null;
-      state.refreshToken = null;
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+      state.loading = false;
+      localStorage.removeItem("userData");
     });
 
-    builder.addCase(fetchUser.fulfilled, (state, action) => {
-      state.status = true;
-      state.userData = action.payload;
-    });
-    builder.addCase(fetchUser.rejected, (state) => {
-      state.status = false;
-      state.userData = null;
-    });
+    // refresh token
+      builder.addCase(refreshToken.pending, (state) => {
+        state.loading = true;
+      });
+
+      builder.addCase(refreshToken.fulfilled, (state, action) => {
+        state.loading = false;
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
+        localStorage.setItem("accessToken", action.payload.accessToken);
+        localStorage.setItem("refreshToken", action.payload.refreshToken);
+      });
+
+      builder.addCase(refreshToken.rejected, (state) => {
+        state.loading = false;
+        state.status = false;
+        state.userData = null;
+        state.accessToken = null;
+        state.refreshToken = null;
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("userData");
+      });
     
   },
 });

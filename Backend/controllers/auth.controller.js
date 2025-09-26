@@ -101,3 +101,20 @@ export const googleLogin = async (req, res) => {
       .json({ success: false, message: "Invalid Google token" });
   }
 };
+
+export const getCurrentUser = (req, res) => {
+  try {
+    if (!req.user) {
+      throw new APIError(401, "Unauthorized: No user found in request");
+    }
+
+    return res
+      .status(200)
+      .json(new APIResponse(200, req.user, "User fetched successfully"));
+  } catch (error) {
+    return res
+      .status(error.statusCode || 500)
+      .json(new APIError(error.statusCode || 500, error.message));
+  }
+};
+

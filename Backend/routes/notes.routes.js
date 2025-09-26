@@ -8,7 +8,6 @@ import {
     getDSAContent,
 } from "../controllers/notes.controller.js";
 import { uploadPDF } from "../middleware/multer.middleware.js";
-import { verifyJWT } from "../middleware/auth.middleware.js";
 
 
 const router = express.Router();
@@ -30,6 +29,6 @@ router.get("/:id/file", async (req, res) => {
       res.status(500).send("Internal Server Error");
     }
 });
-router.route("/:id").get(deleteNote);
+router.route("/delete/:id").get(deleteNote);
 router.route("/dsa").post(getDSAContent);  
 export default router;
