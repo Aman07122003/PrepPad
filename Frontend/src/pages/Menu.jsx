@@ -1,6 +1,5 @@
 import React from 'react';
-import MenuNavbar from '../components/Navbar/MenuNavbar';
-import { BookOpen, Server, Database, Network, Monitor, ChevronDown, Search } from "lucide-react";
+import { BookOpen, Server, Database, Network, DraftingCompass, Monitor, ChevronDown, Search } from "lucide-react";
 
 
 const notes = [
@@ -37,19 +36,35 @@ const notes = [
     difficulty: "Intermediate"
   },
   { 
-    title: "Other Notes", 
-    link: "/notes/others", 
+    title: "Aptitude", 
+    link: "/notes/aptitude", 
+    icon: DraftingCompass,   // good choice for Aptitude/Maths
+    category: "Service Based Companies",
+    description: "Quantitative aptitude for placements",
+    difficulty: "Beginner"
+  },  
+  { 
+    title: "Logical Reasoning", 
+    link: "/notes/logical-reasoning", 
     icon: BookOpen,
     category: "General",
-    description: "Miscellaneous technical notes and resources",
+    description: "Logical Reasoning for placements",
+    difficulty: "Beginner"
+  },
+  { 
+    title: "Verbal Ability", 
+    link: "/notes/verbal-ability", 
+    icon: BookOpen,
+    category: "General",
+    description: "Logical Reasoning for placements",
     difficulty: "Beginner"
   },
 ];
 
 const Menu = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      <MenuNavbar/>
+    <div className="min-h-screen p-5 bg-gradient-to-br from-gray-50 to-blue-50">
+      
       <div className="max-w-7xl mx-auto mt-8">
         {/* Header */}
         <div className="text-center mb-10 relative flex flex-col">
