@@ -13,7 +13,7 @@ import {
   Lock,
   Calculator
 } from 'lucide-react';
-import AptitudeData from './AptitudeData';
+import AptitudeData from '../Aptitude/AptitudeData.js';
 
 const Aptitude = () => {
   const [expandedChapters, setExpandedChapters] = useState({});

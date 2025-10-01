@@ -14,9 +14,11 @@ import {
   Calculator
 } from 'lucide-react';
 import LogicalReasoningData from './LogicalReasoningData';
+import { useNavigate } from 'react-router-dom';
 
 const LogicalReasoning = () => {
   const [expandedChapters, setExpandedChapters] = useState({});
+  const Navigation = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [bookmarkedTopics, setBookmarkedTopics] = useState(new Set());
   const [completedTopics, setCompletedTopics] = useState(new Set());
@@ -180,6 +182,10 @@ const LogicalReasoning = () => {
     return matchesCategory;
   });
 
+  const goto = (topicId) => {
+    Navigation(`/logical-reasoning/${topicId}`);
+  };
+
   // Progress stats
   const totalTopics = LogicalReasoningData.reduce((acc, chapter) => acc + chapter.topics.length, 0);
   const completedCount = completedTopics.size;
@@ -311,7 +317,7 @@ const LogicalReasoning = () => {
 
                 {/* Topics List */}
                 {isExpanded && (
-                  <div className="border-t border-gray-100">
+                    <div className="border-t border-gray-100">
                     <div className="p-4 sm:p-6">
                       <div className="grid gap-2 sm:gap-3">
                         {chapter.topics.map((topic, index) => {
@@ -322,7 +328,7 @@ const LogicalReasoning = () => {
                           return (
                             <div
                               key={index}
-                              className={`group flex items-center gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all duration-200 ${
+                              className={`group flex items-center justify-between gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all duration-200 ${
                                 isCompleted 
                                   ? 'border-green-200 bg-green-50/50' 
                                   : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'
@@ -340,16 +346,18 @@ const LogicalReasoning = () => {
                                   <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                                 </div>
                               </button>
-                              
-                              <div className="flex-1 min-w-0">
-                                <h3 className={`font-medium text-sm sm:text-base leading-relaxed break-words ${
-                                  isCompleted 
-                                    ? 'text-green-800 line-through' 
-                                    : 'text-gray-900 group-hover:text-blue-800'
-                                }`}>
-                                  {topic}
-                                </h3>
-                              </div>
+                                <div className="flex-1 min-w-0">
+                                  <h3
+                                    className={`font-medium text-sm sm:text-base leading-relaxed break-words ${
+                                      isCompleted 
+                                        ? 'text-green-800 line-through' 
+                                        : 'text-gray-900 group-hover:text-blue-800'
+                                    }`}
+                                  >
+                                    <button onClick={() => goto(topic)}>{topic}</button>
+                                  </h3>
+
+                                </div>
                               
                               <button
                                 onClick={(e) => toggleBookmark(topicId, e)}

@@ -15,6 +15,7 @@ import ComputerNetwork from './pages/Notes/CN/ComputerNetwork.jsx';
 import Aptitude from './pages/Notes/Aptitude/Aptitude.jsx';
 import LogicalReasoning from './pages/Notes/LogicalReasoning/LogicalReasoning.jsx';
 import VerbalAbility from './pages/Notes/VerbalAbility/VerbalAbility.jsx';
+import LogicalReasoningTheory from './pages/Notes/LogicalReasoning/LogicalReasoningTheory.jsx';
 
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/notes/aptitude" element={<Aptitude />} />
           <Route path="/notes/logical-reasoning" element={<LogicalReasoning />} />
           <Route path="/notes/verbal-ability" element={<VerbalAbility />} />
+          <Route path="/notes/logical-reasoning/theory" element={<LogicalReasoningTheory />} />
         </Routes>
     </Router>
   );

@@ -3,6 +3,14 @@ import { BookOpen, Server, Database, Network, DraftingCompass, Monitor, ChevronD
 
 
 const notes = [
+  {
+    title: "AWS Cloud Practitioner",
+    link: "/notes/aws-cloud-practitioner",
+    icon: Server,
+    category: "Cloud Computing",
+    description: "Fundamentals of AWS cloud services and architecture",
+    difficulty: "Beginner"
+  },
   { 
     title: "System Design", 
     link: "/notes/system-design", 
