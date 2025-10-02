@@ -6,12 +6,6 @@ import {
   getAllNotes,
   deleteNote,
 } from '../../../api/Notes.api';
-import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
-
-// Set up PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 const Notes = ({ groupedNotes = {}, category = '', subCategory = '' }) => {
   const navigate = useNavigate();
@@ -32,7 +26,7 @@ const Notes = ({ groupedNotes = {}, category = '', subCategory = '' }) => {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [scale, setScale] = useState(1.0);
-  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' for oldest first, 'desc' for newest first
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     fetchNotes();
@@ -40,10 +34,8 @@ const Notes = ({ groupedNotes = {}, category = '', subCategory = '' }) => {
 
   useEffect(() => {
     if (notes.length > 0) {
-      // Extract all unique categories and sort them alphabetically/numerically
       const allCategories = [...new Set(notes.map(note => note.category).filter(Boolean))];
       allCategories.sort((a, b) => {
-        // Try to convert to numbers for numeric sorting, fall back to string comparison
         const numA = parseInt(a);
         const numB = parseInt(b);
         
@@ -146,26 +138,6 @@ const Notes = ({ groupedNotes = {}, category = '', subCategory = '' }) => {
     }
   };
 
-  const handleViewPDF = (pdfUrl, title) => {
-    console.log('PDF URL:', pdfUrl);
-    
-    setPdfViewer({
-      isOpen: true,
-      url: pdfUrl,
-      title: title
-    });
-    setPageNumber(1);
-    setScale(1.0);
-  };
-
-  const closePdfViewer = () => {
-    setPdfViewer({
-      isOpen: false,
-      url: '',
-      title: ''
-    });
-  };
-
   const groupNotesByCategoryAndSubCategory = (notesToGroup) => {
     const grouped = {};
     
@@ -255,16 +227,6 @@ const Notes = ({ groupedNotes = {}, category = '', subCategory = '' }) => {
 };
 
 
-  const formatDate = (dateString) => {
-    if (!dateString) return 'No date';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-
   const toggleSortOrder = () => {
     setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
   };
@@ -273,90 +235,6 @@ const Notes = ({ groupedNotes = {}, category = '', subCategory = '' }) => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      
-      {/* PDF Viewer Modal */}
-      <AnimatePresence>
-        {pdfViewer.isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
-            onClick={closePdfViewer}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-screen overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between p-4 border-b">
-                <h3 className="text-lg font-semibold">{pdfViewer.title}</h3>
-                <button
-                  onClick={closePdfViewer}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-              <div className="p-4 max-h-[70vh] overflow-auto">
-                <Document
-                  file={pdfViewer.url}
-                  onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-                  loading={<div className="text-center py-8">Loading PDF...</div>}
-                >
-                  <Page pageNumber={pageNumber} scale={scale} />
-                </Document>
-              </div>
-              <div className="flex items-center justify-between p-4 border-t bg-gray-50">
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
-                    disabled={pageNumber <= 1}
-                    className="p-2 rounded hover:bg-gray-200 disabled:opacity-50"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-                  <span className="text-sm">
-                    Page {pageNumber} of {numPages || '--'}
-                  </span>
-                  <button
-                    onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages || prev))}
-                    disabled={pageNumber >= (numPages || 1)}
-                    className="p-2 rounded hover:bg-gray-200 disabled:opacity-50"
-                  >
-                    <ChevronRight size={20} />
-                  </button>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => setScale(prev => Math.max(prev - 0.2, 0.5))}
-                    className="p-2 rounded hover:bg-gray-200"
-                  >
-                    <ZoomOut size={20} />
-                  </button>
-                  <span className="text-sm">{(scale * 100).toFixed(0)}%</span>
-                  <button
-                    onClick={() => setScale(prev => Math.min(prev + 0.2, 2))}
-                    className="p-2 rounded hover:bg-gray-200"
-                  >
-                    <ZoomIn size={20} />
-                  </button>
-                  <a
-                    href={pdfViewer.url}
-                    download
-                    className="p-2 rounded hover:bg-gray-200 text-blue-600"
-                  >
-                    <Download size={20} />
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <main className="flex-1 container mx-auto p-4 md:p-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <h1 className="text-2xl font-bold text-gray-800">My Notes</h1>

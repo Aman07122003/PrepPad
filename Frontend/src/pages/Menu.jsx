@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Server, Database, Network, DraftingCompass, Monitor, ChevronDown, Search } from "lucide-react";
+import { BookOpen, Server, Database, Network, DraftingCompass, Snowflake, Monitor, ChevronDown, Search } from "lucide-react";
 
 
 const notes = [
@@ -13,7 +13,7 @@ const notes = [
   },
   { 
     title: "System Design", 
-    link: "/notes/system-design", 
+    link: "/notes/System Design", 
     icon: Server,
     category: "Development",
     description: "Scalable architecture patterns and design principles",
@@ -29,7 +29,7 @@ const notes = [
   },
   { 
     title: "Computer Networks", 
-    link: "/notes/computer-networks", 
+    link: "/notes/Computer Networks", 
     icon: Network,
     category: "Infrastructure",
     description: "Network protocols, topologies and communication",
@@ -37,15 +37,15 @@ const notes = [
   },
   { 
     title: "Operating System", 
-    link: "/notes/os", 
+    link: "/notes/Operating System", 
     icon: Monitor,
     category: "Systems",
     description: "Process management, memory, and file systems",
     difficulty: "Intermediate"
   },
   { 
-    title: "Aptitude", 
-    link: "/notes/aptitude", 
+    title: "Quantative Aptitude", 
+    link: "/notes/Quantative Aptitude", 
     icon: DraftingCompass,   // good choice for Aptitude/Maths
     category: "Service Based Companies",
     description: "Quantitative aptitude for placements",
@@ -53,7 +53,7 @@ const notes = [
   },  
   { 
     title: "Logical Reasoning", 
-    link: "/notes/logical-reasoning", 
+    link: "/notes/Logical Reasoning & Analytical Ability", 
     icon: BookOpen,
     category: "General",
     description: "Logical Reasoning for placements",
@@ -61,12 +61,20 @@ const notes = [
   },
   { 
     title: "Verbal Ability", 
-    link: "/notes/verbal-ability", 
+    link: "/notes/Verbal Ability", 
     icon: BookOpen,
     category: "General",
     description: "Logical Reasoning for placements",
     difficulty: "Beginner"
   },
+  { 
+    title: "Interview Preparation", 
+    link: "/notes/Interview Preparation", 
+    icon: Snowflake,   // good choice for Aptitude/Maths
+    category: "Service Based Companies",
+    description: "Quantitative aptitude for placements",
+    difficulty: "Beginner"
+  },  
 ];
 
 const Menu = () => {
