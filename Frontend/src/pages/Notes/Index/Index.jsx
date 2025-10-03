@@ -20,11 +20,12 @@ import {
   Award
 } from 'lucide-react';
 import { getAptitudeData } from '../../../api/menu.api.js';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const Aptitude = () => {
+const Index = () => {
   const [expandedChapters, setExpandedChapters] = useState({});
   const { section } = useParams();
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [bookmarkedTopics, setBookmarkedTopics] = useState(new Set());
   const [completedTopics, setCompletedTopics] = useState(new Set());
@@ -215,6 +216,13 @@ const Aptitude = () => {
       hover: 'hover:bg-gray-100',
       progress: 'bg-gray-500'
     }
+  };
+
+  const gotoContent = (section, chapter, topic) => {
+    console.log("section:", section);
+    console.log("chapter:", chapter);
+    console.log("topic:", topic);
+    navigate(`/menu/${section}/${chapter}/${topic}`);
   };
 
   const toggleChapter = (chapterId) => {
@@ -455,6 +463,7 @@ const Aptitude = () => {
                       <div className="grid gap-2 sm:gap-3">
                         {chapter.topics?.map((topic, index) => {
                           const topicId = `${chapter.id}-${index}`;
+                          const chapterr = chapter.title;
                           const isBookmarked = bookmarkedTopics.has(topicId);
                           const isCompleted = completedTopics.has(topicId);
 
@@ -486,7 +495,10 @@ const Aptitude = () => {
                                     ? 'text-green-800 line-through' 
                                     : 'text-gray-900 group-hover:text-blue-800'
                                 }`}>
-                                  {topic}
+                                  <button onClick={() => gotoContent(headerVisible.section ,chapterr, typeof topic === "string" ? topic : topic.title || topic.Title)}>
+                                    {typeof topic === "string" ? topic : topic.title || topic.Title}
+                                  </button>
+
                                 </h3>
                               </div>
                               
@@ -546,4 +558,4 @@ const Aptitude = () => {
   );
 };
 
-export default Aptitude;
+export default Index;

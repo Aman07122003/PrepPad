@@ -76,69 +76,6 @@ const NoteDetail = () => {
         fetchNote();
     }, [category, subCategory, question]);
 
-    
-
-    const generatePDF = (contentData) => {
-        const doc = new jsPDF();
-        const pageHeight = doc.internal.pageSize.height;
-        const marginTop = 20;
-        const marginBottom = 20;
-        const usableHeight = pageHeight - marginBottom;
-      
-        let yPos = marginTop;
-      
-        const addNewPage = () => {
-          doc.addPage();
-          yPos = marginTop;
-        };
-      
-        contentData.sections.forEach((section, sectionIndex) => {
-          // Section heading
-          doc.setFontSize(18);
-          doc.text(section.heading, 10, yPos);
-          yPos += 12;
-      
-          section.content.forEach((item) => {
-            // --- Subheading ---
-            if (item.subheading) {
-              const needed = 8;
-              if (yPos + needed > usableHeight) addNewPage();
-              doc.setFontSize(14);
-              doc.text(item.subheading, 12, yPos);
-              yPos += needed;
-            }
-      
-            // --- Paragraph ---
-            if (item.para) {
-              doc.setFontSize(11);
-              const splitText = doc.splitTextToSize(item.para, 180);
-              const needed = splitText.length * 6 + 4;
-              if (yPos + needed > usableHeight) addNewPage();
-              doc.text(splitText, 12, yPos);
-              yPos += needed;
-            }
-      
-            // --- Image ---
-            if (item.image) {
-              const imgHeight = 50;
-              if (yPos + imgHeight > usableHeight) addNewPage();
-              doc.addImage(item.image, "PNG", 12, yPos, 80, imgHeight);
-              yPos += imgHeight + 5;
-            }
-          });
-      
-          // After each section, ensure proper spacing / page break
-          if (sectionIndex !== contentData.sections.length - 1) {
-            addNewPage();
-          }
-        });
-      
-        // Save PDF
-        doc.save("graphs_tutorial.pdf");
-      };
-
-      console.log(contentData);
-
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error loading note: {error.message || JSON.stringify(error)}</div>;
 
@@ -148,12 +85,7 @@ const NoteDetail = () => {
           <div className="flex flex-col w-1/2 bg-white border-r border-gray-200 shadow-lg rounded-r-xl m-2 ml-0">
             {/* Panel header with toggle buttons */}
             <div className="flex ml-1">
-              <button
-                  onClick={() => generatePDF(contentData)}
-                  className="px-4 py-2 hover:text-green-400 hover:border hover:border-green-400 text-black boder border-black rounded-lg shadow"
-                  >
-                  Download PDF
-              </button>
+              
               <button 
                 className={`px-4 py-1 mr-2 ml-2 rounded-lg font-medium transition-all duration-200 flex items-center ${
                   leftView === 'content' 

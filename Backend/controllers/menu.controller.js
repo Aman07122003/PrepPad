@@ -26,3 +26,40 @@ export const getData = async (req, res) => {
       .json(new APIError(500, "Failed to fetch aptitude data", error.message));
   }
 };
+
+export const getContent = async (req, res) => {
+  try {
+    const { section, chapter, topic } = req.params;
+
+    // Find the section
+    const sectionData = await Menu.findOne({ section: section });
+
+    if (!sectionData) {
+      return res.status(404).json({ message: "Section not found" });
+    }
+
+    // Find the subsection (content item)
+    const subsectionData = sectionData.content.find((sub) => sub.title === chapter );
+
+    if (!subsectionData) {
+      return res.status(404).json({ message: "Subsection not found" });
+    }
+
+    // Find the topic
+    const topicData = subsectionData.topics.find((t) => t.Title === topic);
+
+    if (!topicData) {
+      return res.status(404).json({ message: "Topic not found" });
+    }
+
+    // ✅ Return topic details
+    return res
+    .status(200)
+    .json(new APIResponse(200, topicData, "Topic content fetched successfully"));
+  } catch (error) {
+    console.error("Error fetching content:", error);
+    return res
+    .status(500).json(new APIError(500, "Failed to fetch topic content", error.message));
+  }
+};
+

@@ -44,8 +44,8 @@ const notes = [
     difficulty: "Intermediate"
   },
   { 
-    title: "Quantative Aptitude", 
-    link: "/notes/Quantative Aptitude", 
+    title: "Quantitative Aptitude", 
+    link: "/notes/Quantitative Aptitude", 
     icon: DraftingCompass,   // good choice for Aptitude/Maths
     category: "Service Based Companies",
     description: "Quantitative aptitude for placements",
